@@ -1,0 +1,848 @@
+HOST: http://loki3services.apiary.io/loki-services
+
+--- Loki Services ---
+
+---
+[INTERNAL] Documenting the internal APIs (service contracts) between services in the Loki3 architecture.
+
+*NOT UP TO DATE; still working on this*
+
+**Note: all referencese to <code>loki3.apiary.io</code> are for example purposes only. In a deployed Loki Server
+these will be references to the Loki REST API host.**
+
+**TBD: add HAL notes. Note (at least initially) in the response bodies, the _links.self.href matches the URI submitted by the client, including any query parameters**
+
+## URI Templates
+Refer to https://tools.ietf.org/html/rfc6570 for details on URI Templates. Not that Loki REST
+uses reserved characters (i.e. ":") in some URI Template variables, thus the request templates
+use the "{+id}" format - see additional detail at https://tools.ietf.org/html/rfc6570#section-3.2.3.
+---
+
+
+--
+Network Elements
+This section contains resources related to specific network elements.
+--
+
+List network elements.
+
+**TODO:**
+
+* This is a collection that contains only collections and no documents; it's unclear whether this should just list the sub-collections (soft-switches, routing-engines, etc) or actually
+list all configured network elements (each BroadWorks, each Sonus, each SurgeMail, etc).
+* Perhaps it should return a list of network-element types, and within each of those there would be a set of *links* to each network-element. It shouldn't be "url" here, it should be links.
+* Returning them all means there are 2 ways to access a network-element, which is not ideal; "/network-elements/2" and "/network-elements/soft-switches/2" point to the same resource.
+* However if we omit the first option, then you have to know what type of element it is before you can retrieve it.
+* We can support both, but remember: report canonical URIs. If you have two different URIs for the same resource, ensure you put the canonical URL in the response.
+* As this is currently specified, there's no way to fetch the list of supported network element types. 
+GET /INVALID/network-elements
+< 200
+<  thContent-Type: application/json
+{ "network-elements": [
+        { "url": "/network-elements/soft-switches/1", "id" : 1, "platform" : "Sonus PSX", "name": "Sonus East" },
+        { "url": "/network-elements/application-servers/appservers/2", "id" : 2, "platform" : "BroadWorks AS", "name": "BroadWorks Cluster 1 AS2" },
+        { "url": "/network-elements/application-servers/webapps/4", "id" : 3, "platform" : "BroadWorks XSP", "name": "BroadWorks Cluster 1 XSP" },
+        { "url": "/network-elements/routing-engines/3", "id" : 3, "type" : "routing-engine", "platform" : "Sonus PSX", "name": "Sonus West" }
+] }
+
+
+--
+Network Element: Softswitches
+This section contains resources related to softswitches in your network.
+--
+
+List softswitches.
+GET /INVALID/network-elements/soft-switches
+< 200
+< Content-Type: application/json
+{ "routing-engines": [
+    "
+    FIXME" : "fixme"
+] }
+
+
+--
+Sonus PSX Number Translations
+##Collection
+
+Supported network elements:
+
+* Sonus PSX
+
+The Loki Server must have at least one Network Element configured with support for Number Translations (e.g. Sonus PSX).
+
+See the Loki Server documentation appropriate to the configured Network Element for mappings to 3rd-party API fields and
+references to 3rd-party documentation.
+
+Keys:
+
+* sourceDn
+
+Extension Keys (Sonus PSX):
+
+* attributes
+* callProcessingElement1Id
+* callProcessingElement2Id
+* callProcessingElement3Id
+* callProcessingElement4Id
+* callProcessingElementType
+--
+
+
+Create a new number translation on a Sonus PSX.
+
+Service: Sonus Utility Service (uses the Sonus Insight API)
+
+In the initial implementation, any Sonus errors will simply be passed back to the client in a 500 Internal Server Error.
+
+URI Template Variables:
+
+* {ne_id} - The ID of the target network element (i.e. the Sonus PSX instance), as defined in the system configuration.
+POST /network-elements/sonus-psx/{ne_id}/number-translations
+> Content-Type: application/json
+{
+    "sourceDn" : "+1-8665554321",
+    "translatedDn" : "+1-5553043000",
+    "extensions" : {
+        "sonusPsx" : {
+            "attributes" : 0,
+            "callProcessingElement1Id" : "978",
+            "callProcessingElement2Id" : null,
+            "callProcessingElement3Id" : null,
+            "callProcessingElement4Id" : null,
+            "callProcessingElementType" : 5,
+            "servicesProvisioned" : 0,
+            "phoneType" : 1,
+            "suspendedFlag" : 0,
+            "directTranslationFlag" : 0,
+            "translationLabelId" : null,
+            "translatedCarrierId" : null,
+            "translatedCalltype" : 0,
+            "translatedNpi" : 0,
+            "translatedNoa" : 13,
+            "useTranslationProfile" : 0,
+            "translationProfileId" : null
+        }
+    }
+}
+< 201
+< Location: http://loki3services.apiary.io/loki-services/network-elements/sonus-psx/1/number-translations/3%3A%252B1-8665554321%3A1%3A0%3A978%3A%3A%3A%3A5
++++++
+< 500
+
+
+Check if a number translation exists.
+HEAD /network-elements/sonus-psx/{ne_id}/number-translations/{+id}
+< 204
+
+
+Retrieve an individual number translation from a Sonus PSX.
+
+**TODO:**
+
+* **FIXME - out of date, rework it per the above, add links (maybe including a templated link to the GET query?), etc**
+* Include the network-element ID in the response?
+* Include an explcit field for the "id" key, or is the "url" sufficient?
+I think just url; that gives you the URI to access this resource, which is all you need to be able to do
+a PUT or a DELETE or OPTIONS on it.
+GET /INVALID/network-elements/soft-switches/sonus-psx/{ne_id}/number-translations/{+id}
+< 200
+< Content-Type: application/json
+{
+    "number-translation" : {
+        "FIXME_use_HAL": "/network-elements/routing-engines/1/number-translations/3%3A%252B1-8665554321%3A1%3A0%3A978%3A%3A%3A%3A5"
+        "FIXME" : "fixme; move the loki generic fields out of extensions",
+        "extensions" : {
+            "Sonus PSX" : {
+                "nationalId" : "8665554321",
+                "countryId" : "1",
+                "attributes" : 0,
+                "callProcessingElement1Id" : "978",
+                "callProcessingElement2Id" : null,
+                "callProcessingElement3Id" : null,
+                "callProcessingElement4Id" : null,
+                "callProcessingElementType" : 5,
+                "servicesProvisioned" : 0,
+                "phoneType" : 1,
+                "suspendedFlag" : 0,
+                "directTranslationFlag" : 0,
+                "translationLabelId" : null,
+                "translatedNationalId" : "5553043000",
+                "translatedCountryId" : "1",
+                "translatedCarrierId" : null,
+                "translatedCalltype" : 0,
+                "translatedNpi" : 0,
+                "translatedNoa" : 13,
+                "useTranslationProfile" : 0,
+                "translationProfileId" : null,
+            },
+        }
+    },
+}
+
+
+Query number translations.
+
+Query number translations. Responses will include (at a minimum) they fields comprising the unique key for the resource.
+Querying on an extension field for a network element that is not configured will generate an error.
+
+In the initial release, the only supported mode is where all 7 keys are fully specified in the search request. Thus, intially, the response
+will contain at most one match.
+
+[future: pagination of results via offset and max; field parameter to specify included/excluded fields]
+
+##Supported Query Parameters
+
+<table border=1>
+    <thead>
+    <th>Parameter</th>
+    <th>Required?</th>
+    <th>Type</th>
+    <th>Mode</th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>sourceDn</td>
+            <td style="text-align: center; font-weight:bold">&#x2713;</td>
+            <td>core</td>
+            <td>Equal To</td>
+        </tr>
+        <tr>
+            <td>attributes</td>
+            <td style="text-align: center; font-weight:bold">&#x2713;</td>
+            <td>extension</td>
+            <td>Equal To</td>
+        </tr>
+        <tr>
+            <td>callProcessingElement1Id</td>
+            <td style="text-align: center; font-weight:bold">&#x2713;</td>
+            <td>extension</td>
+            <td>Equal To</td>
+        </tr>
+        <tr>
+            <td>callProcessingElement2Id</td>
+            <td style="text-align: center; font-weight:bold">&#x2713;</td>
+            <td>extension</td>
+            <td>Equal To</td>
+        </tr>
+        <tr>
+            <td>callProcessingElement3Id</td>
+            <td style="text-align: center; font-weight:bold">&#x2713;</td>
+            <td>extension</td>
+            <td>Equal To</td>
+        </tr>
+        <tr>
+            <td>callProcessingElement4Id</td>
+            <td style="text-align: center; font-weight:bold">&#x2713;</td>
+            <td>extension</td>
+            <td>Equal To</td>
+        </tr>
+        <tr>
+            <td>callProcessingElementType</td>
+            <td style="text-align: center; font-weight:bold">&#x2713;</td>
+            <td>extension</td>
+            <td>Equal To</td>
+        </tr>
+    </tbody>
+</table>
+GET /network-elements/sonus-psx/{ne_id}/number-translations{?sourceDn,attributes,callProcessingElement1Id,callProcessingElement2Id,callProcessingElement3Id,callProcessingElement4Id,callProcessingElementType}
+< 200
+< Content-Type: application/hal+json
+{
+    "_links" : {
+        "self" : {
+            "href" : "http://loki3services.apiary.io/loki-services/network-elements/sonus-psx/1/number-translations?sourceDn=%2B1-8665554321&attributes=0&callProcessingElement1Id=978&callProcessingElement2Id=&callProcessingElement3Id=&callProcessingElement4Id=&callProcessingElementType=5"
+        }
+    },
+    "curies" : [
+        {
+            "name" : "ls",
+            "href" : "http://loki3services.apiary.io/loki-services/rels/{rel}",
+            "templated" : true
+        },
+    ],
+    "_embedded" : {
+        "ls:number-translations" : [
+            {
+                "_links" : {
+                    "self" : {
+                        "href" : "http://loki3services.apiary.io/loki-services/network-elements/sonus-psx/1/number-translations/3%3A%252B1-8665554321%3A1%3A0%3A978%3A%3A%3A%3A5"
+                    },           
+                },
+                "id" : "3%3A%252B1-8665554321%3A1%3A0%3A978%3A%3A%3A%3A5",
+                "sourceDn" : "+1-8665554321",
+                "translatedDn" : "+1-5553043000",
+                "extensions" : {
+                    "sonusPsx" : {
+                        "attributes" : 0,
+                        "callProcessingElement1Id" : "978",
+                        "callProcessingElement2Id" : null,
+                        "callProcessingElement3Id" : null,
+                        "callProcessingElement4Id" : null,
+                        "callProcessingElementType" : 5,
+                        "servicesProvisioned" : 0,
+                        "phoneType" : 1,
+                        "suspendedFlag" : 0,
+                        "directTranslationFlag" : 0,
+                        "translationLabelId" : null,
+                        "translatedCarrierId" : null,
+                        "translatedCalltype" : 0,
+                        "translatedNpi" : 0,
+                        "translatedNoa" : 13,
+                        "useTranslationProfile" : 0,
+                        "translationProfileId" : null,
+                    },
+                },
+            },
+        ],
+    },
+}
+
+
+Update a number translation.
+PUT /network-elements/sonus-psx/{ne_id}/number-translations/{+id}
+> Content-Type: application/json
+{
+    "translatedDn" : "+1-5553043000",
+    "extensions" : {
+        "sonusPsx" : {
+            "servicesProvisioned" : 0,
+            "phoneType" : 1,
+            "suspendedFlag" : 0,
+            "directTranslationFlag" : 0,
+            "translationLabelId" : null,
+            "translatedCarrierId" : null,
+            "translatedCalltype" : 0,
+            "translatedNpi" : 0,
+            "translatedNoa" : 13,
+            "useTranslationProfile" : 0,
+            "translationProfileId" : null,
+        },
+    },
+}
+< 204
+
+
+Delete a number translation.
+DELETE /network-elements/sonus-psx/{ne_id}/number-translations/{+id}
+< 204
+
+
+--
+Sonus PSX Subscribers
+##Collection
+
+Network Element: Sonus PSX
+
+Keys:
+
+* subscriberId
+* countryId
+* owningCarrierId
+--
+
+
+Create a new Subscriber on a Sonus PSX.
+
+Service: Sonus Utility Service (uses the Sonus Insight API)
+
+In the initial implementation, any Sonus errors will simply be passed back to the client in a 500 Internal Server Error.
+
+URI Template Variables:
+
+* {ne_id} - The ID of the target network element (i.e. the Sonus PSX instance), as defined in the system configuration.
+POST /network-elements/sonus-psx/{ne_id}/subscribers
+> Content-Type: application/json
+{
+    "subscriberId" : "2005553001",
+    "countryId" : "1",
+    "owningCarrierId" : "16",
+    "businessGroupId" : null,
+    "interLataCarrierId" : "5000",
+    "intraLataCarrierId" : "5000",
+    "intlCarrierId" : "5000",
+    "assignedCarrierId" : null,
+    "presentationFlag" : 0,
+    "prfdPacketServiceProfileId" : null,
+    "optionType" : 0,
+    "testSubscriber" : 0,
+    "billingPlanId" : "EXAMPLE_PLAN",
+    "localCarrierId" : "5000",
+    "authcodeScriptId" : "EXAMPLE_SCRIPT",
+    "elementAttributes" : 0,
+    "classOfServiceId" : "EXAMPLE_COS",
+    "pseudoCarrierId" : null,
+    "infoDigitId" : null,
+    "scpBusinessServiceGroup" : 0,
+    "authcodeGroupId" : null,
+    "pinDigits" : null,
+    "svcList1" : 0,
+    "svcList2" : 0,
+    "exceptionProfileId" : "EXAMPLE_PROFILE",
+    "isDestination" : 1,
+    "defaultCpc" : null,
+    "homeMobileNetwork" : 0,
+    "origEntityRoutingProfileId" : "EXAMPLE_RTGPROFILE",
+    "callingArea" : "555_EXAMPLE",
+    "businessUnitId" : null,
+    "deviceProfileId" : null,
+    "memberStatus" : -1
+}
+< 201
+< Location: http://loki3services.apiary.io/loki-services/network-elements/sonus-psx/1/subscribers/1%3A2005553001%3A1%3A16
++++++
+< 500
+
+
+Query Subscribers
+
+Service: Sonus Utility Service (uses the Sonus Insight API)
+
+Query Subscribers. Responses will include (at a minimum) they fields comprising the unique key for the resource.
+Querying on an extension field for a network element that is not configured will generate an error.
+
+In the initial release, the only supported mode is where all keys are fully specified in the search request. Thus, intially, the response
+will contain at most one match.
+
+[future: pagination of results via offset and max; field parameter to specify included/excluded fields]
+
+##Supported Query Parameters
+
+<table border=1>
+    <thead>
+    <th>Parameter</th>
+    <th>Required?</th>
+    <th>Mode</th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>subscriberId</td>
+            <td style="text-align: center; font-weight:bold">&#x2713;</td>
+            <td>Equal To</td>
+        </tr>
+        <tr>
+            <td>countryId</td>
+            <td style="text-align: center; font-weight:bold">&#x2713;</td>
+            <td>Equal To</td>
+        </tr>
+        <tr>
+            <td>owningCarrierId</td>
+            <td style="text-align: center; font-weight:bold">&#x2713;</td>
+            <td>Equal To</td>
+        </tr>
+    </tbody>
+</table>
+GET /network-elements/sonus-psx/{ne_id}/subscribers{?subscriberId,countryId,owningCarrierId}
+< 200
+< Content-Type: application/hal+json
+{
+    "_links" : {
+        "self" : {
+            "href" : "http://loki3services.apiary.io/loki-services/network-elements/sonus-psx/1/subscribers?subscriberId=2005553001&countryId=1&owningCarrierId=16"
+        }
+    },
+    "curies" : [
+        {
+            "name" : "ls",
+            "href" : "http://loki3services.apiary.io/loki-services/rels/{rel}",
+            "templated" : true
+        },
+    ],
+    "_embedded" : {
+        "ls:subscribers" : [
+            {
+                "_links" : {
+                    "self" : {
+                        "href" : "http://loki3services.apiary.io/loki-services/network-elements/sonus-psx/1/subscribers/1%3A2005553001%3A1%3A16"
+                    },           
+                },
+                "id" : "1%3A2005553001%3A1%3A16",
+                "subscriberId" : "2005553001",
+                "countryId" : "1",
+                "owningCarrierId" : "16",
+                "businessGroupId" : null,
+                "interLataCarrierId" : "5000",
+                "intraLataCarrierId" : "5000",
+                "intlCarrierId" : "5000",
+                "assignedCarrierId" : null,
+                "presentationFlag" : 0,
+                "prfdPacketServiceProfileId" : null,
+                "optionType" : 0,
+                "testSubscriber" : 0,
+                "billingPlanId" : "EXAMPLE_PLAN",
+                "localCarrierId" : "5000",
+                "authcodeScriptId" : "EXAMPLE_SCRIPT",
+                "elementAttributes" : 0,
+                "classOfServiceId" : "EXAMPLE_COS",
+                "pseudoCarrierId" : null,
+                "infoDigitId" : null,
+                "scpBusinessServiceGroup" : 0,
+                "authcodeGroupId" : null,
+                "pinDigits" : null,
+                "svcList1" : 0,
+                "svcList2" : 0,
+                "exceptionProfileId" : "EXAMPLE_PROFILE",
+                "isDestination" : 1,
+                "defaultCpc" : null,
+                "homeMobileNetwork" : 0,
+                "origEntityRoutingProfileId" : "EXAMPLE_RTGPROFILE",
+                "callingArea" : "555_EXAMPLE",
+                "businessUnitId" : null,
+                "deviceProfileId" : null,
+                "memberStatus" : -1
+            },
+        ],
+    },
+}
++++++
+< 404
++++++
+< 500
+
+
+--
+Sonus PSX Destinations
+##Collection
+
+Network Element: Sonus PSX
+
+Keys:
+
+* nationalId
+* countryId
+--
+
+
+Create a new Destination on a Sonus PSX.
+
+Service: Sonus Utility Service (uses the Sonus Insight API)
+
+In the initial implementation, any Sonus errors will simply be passed back to the client in a 500 Internal Server Error.
+
+URI Template Variables:
+
+* {ne_id} - The ID of the target network element (i.e. the Sonus PSX instance), as defined in the system configuration.
+POST /network-elements/sonus-psx/{ne_id}/destinations
+> Content-Type: application/json
+{
+    "nationalId" : "2005553001",
+    "countryId" : "1",
+    "destSvcScriptId" : null,
+    "customScriptId" : null,
+    "elementAttributes" : 0,
+    "prfdPacketServiceProfileId" : null,
+    "routingLabelId" : "EXAMPLE_RTNG_LBL",
+    "isSubscriber" : 1,
+    "portedType" : 0,
+    "lnpTransitionFlag" : 0,
+    "homeGateway" : "EXAMPLE_GW",
+    "exceptionProfileId" : null,
+    "businessGroupId" : null,
+    "businessUnitId" : null
+}
+< 201
+< Location: http://loki3services.apiary.io/loki-services/network-elements/sonus-psx/1/destinations/1%3A2005553001%3A1
++++++
+< 500
+
+
+Query Destinations
+
+Service: Sonus Utility Service (uses the Sonus Insight API)
+
+Query Destinations. Responses will include (at a minimum) they fields comprising the unique key for the resource.
+Querying on an extension field for a network element that is not configured will generate an error.
+
+In the initial release, the only supported mode is where all keys are fully specified in the search request. Thus, intially, the response
+will contain at most one match.
+
+[future: pagination of results via offset and max; field parameter to specify included/excluded fields]
+
+##Supported Query Parameters
+
+<table border=1>
+    <thead>
+    <th>Parameter</th>
+    <th>Required?</th>
+    <th>Mode</th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>nationalId</td>
+            <td style="text-align: center; font-weight:bold">&#x2713;</td>
+            <td>Equal To</td>
+        </tr>
+        <tr>
+            <td>countryId</td>
+            <td style="text-align: center; font-weight:bold">&#x2713;</td>
+            <td>Equal To</td>
+        </tr>
+    </tbody>
+</table>
+GET /network-elements/sonus-psx/{ne_id}/destinations{?nationalId,countryId}
+< 200
+< Content-Type: application/hal+json
+{
+    "_links" : {
+        "self" : {
+            "href" : "http://loki3services.apiary.io/loki-services/network-elements/sonus-psx/1/destinations?nationalId=2005553001&countryId=1"
+        }
+    },
+    "curies" : [
+        {
+            "name" : "ls",
+            "href" : "http://loki3services.apiary.io/loki-services/rels/{rel}",
+            "templated" : true
+        },
+    ],
+    "_embedded" : {
+        "ls:destinations" : [
+            {
+                "_links" : {
+                    "self" : {
+                        "href" : "http://loki3services.apiary.io/loki-services/network-elements/sonus-psx/1/destinations/1%3A2005553001%3A1"
+                    },           
+                },
+                "id" : "1%3A2005553001%3A1",
+                "nationalId" : "2005553001",
+                "countryId" : "1",
+                "destSvcScriptId" : null,
+                "customScriptId" : null,
+                "elementAttributes" : 0,
+                "prfdPacketServiceProfileId" : null,
+                "routingLabelId" : "EXAMPLE_RTNG_LBL",
+                "isSubscriber" : 1,
+                "portedType" : 0,
+                "lnpTransitionFlag" : 0,
+                "homeGateway" : "EXAMPLE_GW",
+                "exceptionProfileId" : null,
+                "businessGroupId" : null,
+                "businessUnitId" : null
+            },
+        ],
+    },
+}
++++++
+< 404
++++++
+< 500
+
+
+--
+Sonus PSX Routes
+##Collection
+
+Network Element: Sonus PSX
+
+Keys:
+
+* callProcessingElement1Id
+* callProcessingElement2Id
+* callProcessingElement3Id
+* callProcessingElement4Id
+* callProcessingElementType
+* routingType
+* destinationNationalId
+* destinationCountryId
+* partitionId
+* calltype
+* transmissionMedium
+* userCallType
+* digitType
+* timeRangeProfileId
+* callParamFilterProfileId
+* domainName
+--
+
+
+Create a new Route on a Sonus PSX.
+
+Service: Sonus Utility Service (uses the Sonus Insight API)
+
+In the initial implementation, any Sonus errors will simply be passed back to the client in a 500 Internal Server Error.
+
+URI Template Variables:
+
+* {ne_id} - The ID of the target network element (i.e. the Sonus PSX instance), as defined in the system configuration.
+POST /network-elements/sonus-psx/{ne_id}/routes
+> Content-Type: application/json
+{
+	"callProcessingElement1Id" : null,
+	"callProcessingElement2Id" : null,
+	"callProcessingElement3Id" : null,
+	"callProcessingElement4Id" : null,
+	"callProcessingElementType" : 0,
+	"routingType" : 3,
+	"destinationNationalId" : "2005553001",
+	"destinationCountryId" : "1",
+	"partitionId" : "EXAMPLE_PARTITION",
+	"calltype" : 0,
+	"transmissionMedium" : "0",
+	"userCallType" : 0,
+	"digitType" : 2147483647,
+	"timeRangeProfileId" : "ALL",
+	"callParamFilterProfileId" : null,
+	"domainName" : null
+	"routingLabelId" : "EXAMPLE_RTNG_LBL"
+}
+< 201
+< Location: http://loki3services.apiary.io/loki-services/network-elements/sonus-psx/1/routes/1%3A%3A%3A%3A%3A0%3A3%3A2005553001%3A1%3AEXAMPLE_PARTITION%3A0%3A0%3A0%3A2147483647%3AALL%3A%3A%3AEXAMPLE_RTNG_LBL
++++++
+< 500
+
+
+Query Routes
+
+Service: Sonus Utility Service (uses the Sonus Insight API)
+
+Query Routes. Responses will include (at a minimum) they fields comprising the unique key for the resource.
+Querying on an extension field for a network element that is not configured will generate an error.
+
+In the initial release, the only supported mode is where all keys are fully specified in the search request. Thus, intially, the response
+will contain at most one match. Note, while some fields in a Sonus RouteKey are in fact optional in the "retrieve" method (userCallType,
+digitType, callParamFilterProfileId, domainName), for consistency the Loki Server API requires that all fields of the key be
+specified in the GET query.
+
+[future: pagination of results via offset and max; field parameter to specify included/excluded fields]
+
+##Supported Query Parameters
+
+<table border=1>
+    <thead>
+    <th>Parameter</th>
+    <th>Required?</th>
+    <th>Mode</th>
+    </thead>
+    <tbody>
+        <tr>
+			<td>callProcessingElement1Id
+            <td style="text-align: center; font-weight:bold">&#x2713;</td>
+            <td>Equal To</td>
+        </tr>
+        <tr>
+			<td>callProcessingElement2Id
+            <td style="text-align: center; font-weight:bold">&#x2713;</td>
+            <td>Equal To</td>
+        </tr>
+        <tr>
+			<td>callProcessingElement3Id
+            <td style="text-align: center; font-weight:bold">&#x2713;</td>
+            <td>Equal To</td>
+        </tr>
+        <tr>
+			<td>callProcessingElement4Id
+            <td style="text-align: center; font-weight:bold">&#x2713;</td>
+            <td>Equal To</td>
+        </tr>
+        <tr>
+			<td>callProcessingElementType
+            <td style="text-align: center; font-weight:bold">&#x2713;</td>
+            <td>Equal To</td>
+        </tr>
+        <tr>
+			<td>routingType
+            <td style="text-align: center; font-weight:bold">&#x2713;</td>
+            <td>Equal To</td>
+        </tr>
+        <tr>
+			<td>destinationNationalId
+            <td style="text-align: center; font-weight:bold">&#x2713;</td>
+            <td>Equal To</td>
+        </tr>
+        <tr>
+			<td>destinationCountryId
+            <td style="text-align: center; font-weight:bold">&#x2713;</td>
+            <td>Equal To</td>
+        </tr>
+        <tr>
+			<td>partitionId
+            <td style="text-align: center; font-weight:bold">&#x2713;</td>
+            <td>Equal To</td>
+        </tr>
+        <tr>
+			<td>calltype
+            <td style="text-align: center; font-weight:bold">&#x2713;</td>
+            <td>Equal To</td>
+        </tr>
+        <tr>
+			<td>transmissionMedium
+            <td style="text-align: center; font-weight:bold">&#x2713;</td>
+            <td>Equal To</td>
+        </tr>
+        <tr>
+			<td>userCallType
+            <td style="text-align: center; font-weight:bold">&#x2713;</td>
+            <td>Equal To</td>
+        </tr>
+        <tr>
+			<td>digitType
+            <td style="text-align: center; font-weight:bold">&#x2713;</td>
+            <td>Equal To</td>
+        </tr>
+        <tr>
+			<td>timeRangeProfileId
+            <td style="text-align: center; font-weight:bold">&#x2713;</td>
+            <td>Equal To</td>
+        </tr>
+        <tr>
+			<td>callParamFilterProfileId
+            <td style="text-align: center; font-weight:bold">&#x2713;</td>
+            <td>Equal To</td>
+        </tr>
+        <tr>
+			<td>domainName
+            <td style="text-align: center; font-weight:bold">&#x2713;</td>
+            <td>Equal To</td>
+        </tr>
+    </tbody>
+</table>
+GET /network-elements/sonus-psx/{ne_id}/routes{?callProcessingElement1Id,callProcessingElement2Id,...}
+< 200
+< Content-Type: application/hal+json
+{
+    "_links" : {
+        "self" : {
+            "href" : "http://loki3services.apiary.io/loki-services/network-elements/sonus-psx/1/routes?callProcessingElement1Id=&callProcessingElement2Id=&callProcessingElement3Id=&callProcessingElement4Id=&callProcessingElementType=0&routingType=3&destinationNationalId=2005553001&destinationCountryId=1&partitionId=EXAMPLE_PARTITION&calltype=0&transmissionMedium=0&userCallType=0&digitType=2147483647&timeRangeProfileId=ALL&callParamFilterProfileId=&domainName="
+        }
+    },
+    "curies" : [
+        {
+            "name" : "ls",
+            "href" : "http://loki3services.apiary.io/loki-services/rels/{rel}",
+            "templated" : true
+        },
+    ],
+    "_embedded" : {
+        "ls:routes" : [
+            {
+                "_links" : {
+                    "self" : {
+                        "href" : "http://loki3services.apiary.io/loki-services/network-elements/sonus-psx/1/routes/1%3A%3A%3A%3A%3A0%3A3%3A2005553001%3A1%3AEXAMPLE_PARTITION%3A0%3A0%3A0%3A2147483647%3AALL%3A%3A%3AEXAMPLE_RTNG_LBL"
+                    },           
+                },
+                "id" : "1%3A%3A%3A%3A%3A0%3A3%3A2005553001%3A1%3AEXAMPLE_PARTITION%3A0%3A0%3A0%3A2147483647%3AALL%3A%3A%3AEXAMPLE_RTNG_LBL",
+            	"callProcessingElement1Id" : null,
+	            "callProcessingElement2Id" : null,
+	            "callProcessingElement3Id" : null,
+	            "callProcessingElement4Id" : null,
+	            "callProcessingElementType" : 0,
+	            "routingType" : 3,
+	            "destinationNationalId" : "2005553001",
+	            "destinationCountryId" : "1",
+	            "partitionId" : "EXAMPLE_PARTITION",
+	            "calltype" : 0,
+	            "transmissionMedium" : "0",
+	            "userCallType" : 0,
+	            "digitType" : 2147483647,
+	            "timeRangeProfileId" : "ALL",
+	            "callParamFilterProfileId" : null,
+	            "domainName" : null
+	            "routingLabelId" : "EXAMPLE_RTNG_LBL"
+            },
+        ],
+    },
+}
++++++
+< 404
++++++
+< 500
