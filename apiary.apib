@@ -846,3 +846,52 @@ GET /network-elements/sonus-psx/{ne_id}/routes{?callProcessingElement1Id,callPro
 < 404
 +++++
 < 500
+
+
+--
+BroadWorks OCI Interface
+
+Network Element: BroadWorks XSP
+--
+
+Process an OCI request.
+
+**Not finalized; may change how credentials/auth/sessions work**
+
+POST /broadworks-oci/process/
+> Content-Type: application/json
+{
+    "requestCommand" : "GroupGetRequest",
+    "parameters" : {
+        "serviceProviderId" : "Leonid",
+        "groupId" : "Central"
+    }
+}
+< 200
+{
+    "responseCommand" : "GroupGetResponse14sp7",
+    "parameters" : {
+        "defaultDomain": "r19.leonidsystems.com",
+        "userLimit": "6",
+        "userCount": "3",
+        "groupName": "Leonid Neil",
+        "callingLineIdName": "Leonid Neil",
+        "timeZone": "America/St_Johns",
+        "timeZoneDisplayName": "(GMT-02:30) (Canada) Newfoundland",
+        "contact": {
+            "contactEmail": "nbrewster@arch.leonidsystems.com"
+        }
+    }
+}
++++++
+< 401
+{
+    "tbd": "tbd"
+}
++++++
+< 400
+{
+    "tbd": "tbd"
+}
++++++
+< 500
