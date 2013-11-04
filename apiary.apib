@@ -858,40 +858,38 @@ Process an OCI request.
 
 **Not finalized; may change how credentials/auth/sessions work**
 
+**Really necessary to have paramaters sub-element? or, just flatten it?**
+
 POST /broadworks-oci/process/
 > Content-Type: application/json
 {
-    "requestCommand" : "GroupGetRequest",
-    "parameters" : {
-        "serviceProviderId" : "Leonid",
-        "groupId" : "Central"
-    }
+    "commane" : "GroupGetRequest",
+    "serviceProviderId" : "Leonid",
+    "groupId" : "Central"
 }
 < 200
 {
-    "responseCommand" : "GroupGetResponse14sp7",
-    "parameters" : {
-        "defaultDomain": "r19.leonidsystems.com",
-        "userLimit": "6",
-        "userCount": "3",
-        "groupName": "Leonid Neil",
-        "callingLineIdName": "Leonid Neil",
-        "timeZone": "America/St_Johns",
-        "timeZoneDisplayName": "(GMT-02:30) (Canada) Newfoundland",
-        "contact": {
-            "contactEmail": "nbrewster@arch.leonidsystems.com"
-        }
+    "command" : "GroupGetResponse14sp7",
+    "defaultDomain": "r19.leonidsystems.com",
+    "userLimit": "6",
+    "userCount": "3",
+    "groupName": "Leonid Neil",
+    "callingLineIdName": "Leonid Neil",
+    "timeZone": "America/St_Johns",
+    "timeZoneDisplayName": "(GMT-02:30) (Canada) Newfoundland",
+    "contact": {
+        "contactEmail": "nbrewster@arch.leonidsystems.com"
     }
 }
 +++++
 < 401
 {
-    "tbd": "tbd"
+    "summary" : "Unable to authenticate to BroadWorks: Invalid username or password."
 }
 +++++
 < 400
 {
-    "tbd": "tbd"
+    "tbd": "placeholder for internal request validation failure (note a request validation error from the OCI itself will result in a 500"
 }
 +++++
 < 500
