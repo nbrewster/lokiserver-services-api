@@ -860,7 +860,7 @@ Process an OCI request.
 
 **Really necessary to have paramaters sub-element? or, just flatten it?**
 
-POST /broadworks-oci/process/
+POST /network-elements/broadworks-xsp/{ne_id}/processOci
 > Content-Type: application/json
 {
     "commane" : "GroupGetRequest",
@@ -884,12 +884,28 @@ POST /broadworks-oci/process/
 +++++
 < 401
 {
-    "summary" : "Unable to authenticate to BroadWorks: Invalid username or password."
+    "summary" : "[TBD final body] Unable to authenticate to BroadWorks: Invalid username or password."
 }
 +++++
 < 400
 {
     "tbd": "placeholder for internal request validation failure (note a request validation error from the OCI itself will result in a 500"
+}
++++++
+< 403
+{
+    "errorCode" : "EXTERNAL_API_FORBIDDEN",
+    "externalErrorCode" : 4003,
+    "externalErrorSummary" : "[Error 4003] Unauthorized request: UserGetListInGroupRequest",
+    "externalErrorDetail" : "[Error 4003] Unauthorized request: UserGetListInGroupRequest"
+}
++++++
+< 424
+{
+    "errorCode" : "EXTERNAL_API_ERROR",
+    "externalErrorCode" : 4410,
+    "externalErrorSummary" : "[Error 4410] Service is not assigned to this subscriber: Call Forwarding Not Reachable",
+    "externalErrorDetail" : "[Error 4410] Service is not assigned to this subscriber: Call Forwarding Not Reachable"
 }
 +++++
 < 500
