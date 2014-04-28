@@ -43,7 +43,7 @@ list all configured network elements (each BroadWorks, each Sonus, each SurgeMai
 * Returning them all means there are 2 ways to access a network-element, which is not ideal; "/network-elements/2" and "/network-elements/soft-switches/2" point to the same resource.
 * However if we omit the first option, then you have to know what type of element it is before you can retrieve it.
 * We can support both, but remember: report canonical URIs. If you have two different URIs for the same resource, ensure you put the canonical URL in the response.
-* As this is currently specified, there's no way to fetch the list of supported network element types. 
+* As this is currently specified, there's no way to fetch the list of supported network element types.
 GET /INVALID/network-elements
 < 200
 < Content-Type: application/json
@@ -85,10 +85,8 @@ references to 3rd-party documentation.
 
 Keys:
 
-* sourceDn
-
-Extension Keys (Sonus PSX):
-
+* nationalId
+* countryId
 * attributes
 * callProcessingElement1Id
 * callProcessingElement2Id
@@ -161,61 +159,58 @@ will contain at most one match.
     <thead>
     <th>Parameter</th>
     <th>Required?</th>
-    <th>Type</th>
     <th>Mode</th>
     </thead>
     <tbody>
         <tr>
-            <td>sourceDn</td>
+            <td>nationalId</td>
             <td style="text-align: center; font-weight:bold">&#x2713;</td>
-            <td>core</td>
+            <td>Equal To</td>
+        </tr>
+        <tr>
+            <td>countryId</td>
+            <td style="text-align: center; font-weight:bold">&#x2713;</td>
             <td>Equal To</td>
         </tr>
         <tr>
             <td>attributes</td>
             <td style="text-align: center; font-weight:bold">&#x2713;</td>
-            <td>extension</td>
             <td>Equal To</td>
         </tr>
         <tr>
             <td>callProcessingElement1Id</td>
             <td style="text-align: center; font-weight:bold">&#x2713;</td>
-            <td>extension</td>
             <td>Equal To</td>
         </tr>
         <tr>
             <td>callProcessingElement2Id</td>
             <td style="text-align: center; font-weight:bold">&#x2713;</td>
-            <td>extension</td>
             <td>Equal To</td>
         </tr>
         <tr>
             <td>callProcessingElement3Id</td>
             <td style="text-align: center; font-weight:bold">&#x2713;</td>
-            <td>extension</td>
             <td>Equal To</td>
         </tr>
         <tr>
             <td>callProcessingElement4Id</td>
             <td style="text-align: center; font-weight:bold">&#x2713;</td>
-            <td>extension</td>
             <td>Equal To</td>
         </tr>
         <tr>
             <td>callProcessingElementType</td>
             <td style="text-align: center; font-weight:bold">&#x2713;</td>
-            <td>extension</td>
             <td>Equal To</td>
         </tr>
     </tbody>
 </table>
-GET /network-elements/sonus-psx/{+ne_id}/number-translations{?sourceDn,attributes,callProcessingElement1Id,callProcessingElement2Id,callProcessingElement3Id,callProcessingElement4Id,callProcessingElementType}
+GET /network-elements/sonus-psx/{+ne_id}/number-translations{?nationalId,countryId,attributes,callProcessingElement1Id,callProcessingElement2Id,callProcessingElement3Id,callProcessingElement4Id,callProcessingElementType}
 < 200
 < Content-Type: application/hal+json
 {
     "_links" : {
         "self" : {
-            "href" : "http://loki3services.apiary.io/loki-services/network-elements/sonus-psx/1/number-translations?sourceDn=%2B1-8665554321&attributes=0&callProcessingElement1Id=978&callProcessingElement2Id=&callProcessingElement3Id=&callProcessingElement4Id=&callProcessingElementType=5"
+            "href" : "http://loki3services.apiary.io/loki-services/network-elements/sonus-psx/1/number-translations?nationalId=8665554321&countryId=1&attributes=0&callProcessingElement1Id=978&callProcessingElement2Id=&callProcessingElement3Id=&callProcessingElement4Id=&callProcessingElementType=5"
         }
     },
     "curies" : [
@@ -2595,22 +2590,27 @@ CHANGELOG
 
 #1.5
 Changes for *Functional Description: Alternate API Navigation*:
+
 * Update URIs (self links, Location headers) to reflect changed URI construction
 * Update response bodies to add new properties required to expand URI Template variables
 * Correct specification for Sonus routes GET query
 * Add specification for Sonus route-queries GET query
 
 Changes for *Functional Description: Sonus Entity and Utility Services - Subscriber, Destination, and Route Modify Support*:
+
 * Add PUT for Sonus subscribers, destinations, routes.
 
 Changes for *Functional Description: Sonus Entity and Utility Services - Route Query Enhancements*:
+
 * Update Sonus routes GET query documentation, supported URL query parameters, and 200 OK response body.
 
 Changes for *Functional Description: VoIP User Create - Configure Call Forwarding Not Reachable (BroadWorks)*:
+
 * Update POST /broadworks/users (and various request/response bodies in all the process-related calls) to add Call Forwarding Not Reachable service.
 * Add PUT /broadworks/service-providers/{+serviceProviderId}/groups/{+groupId}/users/{+userId}/services/Call%20Forwarding%20Not%20Reachable
 
 General:
+
 * update all HAL responses to include curies, regardless of whether or not _embedded is present
 * Add "+" in various URI templates to indicate reserved expansion.
 * Remove invalid number-translations GET.
