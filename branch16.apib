@@ -1,15 +1,15 @@
 HOST: http://loki3services.apiary.io/loki-services
 
---- Loki Services ---
+--- Loki Services (branch 1.6) ---
 
 ---
 
-# This documentation is for the internal API, GA release (Loki REST 1.4).
+# This documentation is for the internal API, branch 1.6 (pre-release).
 See also:
 
 * [Internal API, dev (pre-release)](http://docs.lokiservicesdev.apiary.io/)
-* [Internal API, branch (pre-release)](http://docs.lokiservicesbranch.apiary.io/)
-* [Internal API, GA release](http://docs.loki3services.apiary.io/) (this document)
+* [Internal API, branch (pre-release)](http://docs.lokiservicesbranch.apiary.io/) (this document)
+* [Internal API, GA release](http://docs.loki3services.apiary.io/)
 * [Public API, dev (pre-release)](http://docs.lokidev.apiary.io/)
 * [Public API, branch (pre-release)](http://docs.lokiserverbranch.apiary.io/)
 * [Public API, GA release](http://docs.lokiserver.apiary.io/)
@@ -26,48 +26,6 @@ Refer to https://tools.ietf.org/html/rfc6570 for details on URI Templates. Not t
 uses reserved characters (i.e. ":") in some URI Template variables, thus the request templates
 use the "{+id}" format - see additional detail at https://tools.ietf.org/html/rfc6570#section-3.2.3.
 ---
-
-
---
-Network Elements
-This section contains resources related to specific network elements.
---
-
-List network elements.
-
-**TODO:**
-
-* This is a collection that contains only collections and no documents; it's unclear whether this should just list the sub-collections (soft-switches, routing-engines, etc) or actually
-list all configured network elements (each BroadWorks, each Sonus, each SurgeMail, etc).
-* Perhaps it should return a list of network-element types, and within each of those there would be a set of *links* to each network-element. It shouldn't be "url" here, it should be links.
-* Returning them all means there are 2 ways to access a network-element, which is not ideal; "/network-elements/2" and "/network-elements/soft-switches/2" point to the same resource.
-* However if we omit the first option, then you have to know what type of element it is before you can retrieve it.
-* We can support both, but remember: report canonical URIs. If you have two different URIs for the same resource, ensure you put the canonical URL in the response.
-* As this is currently specified, there's no way to fetch the list of supported network element types.
-GET /INVALID/network-elements
-< 200
-< Content-Type: application/json
-{ "network-elements": [
-        { "url": "/network-elements/soft-switches/1", "id" : 1, "platform" : "Sonus PSX", "name": "Sonus East" },
-        { "url": "/network-elements/application-servers/appservers/2", "id" : 2, "platform" : "BroadWorks AS", "name": "BroadWorks Cluster 1 AS2" },
-        { "url": "/network-elements/application-servers/webapps/4", "id" : 3, "platform" : "BroadWorks XSP", "name": "BroadWorks Cluster 1 XSP" },
-        { "url": "/network-elements/routing-engines/3", "id" : 3, "type" : "routing-engine", "platform" : "Sonus PSX", "name": "Sonus West" }
-] }
-
-
---
-Network Element: Softswitches
-This section contains resources related to softswitches in your network.
---
-
-List softswitches.
-GET /INVALID/network-elements/soft-switches
-< 200
-< Content-Type: application/json
-{ "routing-engines": [
-    "
-    FIXME" : "fixme"
-] }
 
 
 --
@@ -93,6 +51,12 @@ Keys:
 * callProcessingElement3Id
 * callProcessingElement4Id
 * callProcessingElementType
+
+Refer to the **Sonus Insight API Programmer Guide** for descriptions, data types, defaults, and allowed values for
+request and response properties. Note:
+
+* If the Sonus documentation indicates a data type of integer, short, or long, the value will be numeric in the Loki REST JSON responses.
+* If the Sonus documentation indicates a data type of string, the value will be a string (or null) in the Loki REST JSON responses.
 --
 
 
@@ -131,16 +95,20 @@ POST /network-elements/sonus-psx/{+ne_id}/number-translations
     "translationProfileId" : null
 }
 < 201
+< Transaction-Id: 1380080943120
 < Location: http://loki3services.apiary.io/loki-services/network-elements/sonus-psx/1/number-translations/3-1-8665554321-0-978----5
 +++++
 < 500
+< Transaction-Id: 1380080943120
 
 
 Check if a number translation exists.
 HEAD /network-elements/sonus-psx/{+ne_id}/number-translations/{+id}
 < 204
+< Transaction-Id: 1380080943120
 +++++
 < 404
+< Transaction-Id: 1380080943120
 
 
 Query number translations.
@@ -164,48 +132,49 @@ will contain at most one match.
     <tbody>
         <tr>
             <td>nationalId</td>
-            <td style="text-align: center; font-weight:bold">&#x2713;</td>
+            <td style="text-align: center">yes</td>
             <td>Equal To</td>
         </tr>
         <tr>
             <td>countryId</td>
-            <td style="text-align: center; font-weight:bold">&#x2713;</td>
+            <td style="text-align: center">yes</td>
             <td>Equal To</td>
         </tr>
         <tr>
             <td>attributes</td>
-            <td style="text-align: center; font-weight:bold">&#x2713;</td>
+            <td style="text-align: center">yes</td>
             <td>Equal To</td>
         </tr>
         <tr>
             <td>callProcessingElement1Id</td>
-            <td style="text-align: center; font-weight:bold">&#x2713;</td>
+            <td style="text-align: center">yes</td>
             <td>Equal To</td>
         </tr>
         <tr>
             <td>callProcessingElement2Id</td>
-            <td style="text-align: center; font-weight:bold">&#x2713;</td>
+            <td style="text-align: center">yes</td>
             <td>Equal To</td>
         </tr>
         <tr>
             <td>callProcessingElement3Id</td>
-            <td style="text-align: center; font-weight:bold">&#x2713;</td>
+            <td style="text-align: center">yes</td>
             <td>Equal To</td>
         </tr>
         <tr>
             <td>callProcessingElement4Id</td>
-            <td style="text-align: center; font-weight:bold">&#x2713;</td>
+            <td style="text-align: center">yes</td>
             <td>Equal To</td>
         </tr>
         <tr>
             <td>callProcessingElementType</td>
-            <td style="text-align: center; font-weight:bold">&#x2713;</td>
+            <td style="text-align: center">yes</td>
             <td>Equal To</td>
         </tr>
     </tbody>
 </table>
 GET /network-elements/sonus-psx/{+ne_id}/number-translations{?nationalId,countryId,attributes,callProcessingElement1Id,callProcessingElement2Id,callProcessingElement3Id,callProcessingElement4Id,callProcessingElementType}
 < 200
+< Transaction-Id: 1380080943120
 < Content-Type: application/hal+json
 {
     "_links" : {
@@ -229,7 +198,7 @@ GET /network-elements/sonus-psx/{+ne_id}/number-translations{?nationalId,country
                     }
                 },
                 "id" : "3-1-8665554321-0-978----5",
-                "ne_id" : "3",
+                "ne_id" : "1",
                 "nationalId" : "8665554321",
                 "countryId" : "1",
                 "translatedNationalId" : "5553043000",
@@ -255,6 +224,14 @@ GET /network-elements/sonus-psx/{+ne_id}/number-translations{?nationalId,country
         ]
     }
 }
++++++
+< 404
+< Transaction-Id: 1380080943120
+{
+    "errorCode": "ERR_REC_NOT_FOUND",
+    "summary": "Failed to 'Retrieve' entity.",
+    "detail": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" [^] xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" [^] xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">\n [^] <soapenv:Body>\n <soapenv:Fault>\n <faultcode>soapenv:Server.generalException</faultcode>\n <faultstring></faultstring>\n <detail>\n <ns1:fault href=\"#id0\" xmlns:ns1=\"http://www.sonusnet.com/ems/emsapi/psx/r07_03_06/intf\"/>\n [^] <ns2:exceptionName xmlns:ns2=\"http://xml.apache.org/axis/\">com.sonus.ems.api.psx.r07_03_06.model.ProvApiException</ns2:exceptionName>\n [^] </detail>\n </soapenv:Fault>\n <multiRef id=\"id0\" soapenc:root=\"0\" soapenv:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\" [^] xsi:type=\"ns3:ProvApiException\" xmlns:soapenc=\"http://schemas.xmlsoap.org/soap/encoding/\" [^] xmlns:ns3=\"http://www.sonusnet.com/ems/emsapi/psx/r07_03_06/model\">\n [^] <errorCode xsi:type=\"xsd:string\">ERR_REC_NOT_FOUND</errorCode>\n <message xsi:type=\"xsd:string\">Failed to 'Retrieve' entity.</message>\n <rootCause xsi:type=\"xsd:string\">(ERR_REC_NOT_FOUND) [resource] not found for the given criteria. (rc=17)</rootCause>\n </multiRef>\n </soapenv:Body>\n</soapenv:Envelope>"
+}
 
 
 Update a number translation. All fields are optional.
@@ -276,11 +253,13 @@ PUT /network-elements/sonus-psx/{+ne_id}/number-translations/{+id}
     "translationProfileId" : null
 }
 < 204
+< Transaction-Id: 1380080943120
 
 
 Delete a number translation.
 DELETE /network-elements/sonus-psx/{+ne_id}/number-translations/{+id}
 < 204
+< Transaction-Id: 1380080943120
 
 
 --
@@ -294,6 +273,12 @@ Keys:
 * subscriberId
 * countryId
 * owningCarrierId
+
+Refer to the **Sonus Insight API Programmer Guide** for descriptions, data types, defaults, and allowed values for
+request and response properties. Note:
+
+* If the Sonus documentation indicates a data type of integer, short, or long, the value will be numeric in the Loki REST JSON responses.
+* If the Sonus documentation indicates a data type of string, the value will be a string (or null) in the Loki REST JSON responses.
 --
 
 
@@ -345,11 +330,23 @@ POST /network-elements/sonus-psx/{+ne_id}/subscribers
     "memberStatus" : -1
 }
 < 201
+< Transaction-Id: 1380080943120
 < Location: http://loki3services.apiary.io/loki-services/network-elements/sonus-psx/1/subscribers/1-2005553001-1-16
 +++++
 < 200
+< Transaction-Id: 1380080943120
 +++++
 < 500
+< Transaction-Id: 1380080943120
+
+
+Check if a subscriber exists.
+HEAD /network-elements/sonus-psx/{+ne_id}/subscribers/{+id}
+< 204
+< Transaction-Id: 1380080943120
++++++
+< 404
+< Transaction-Id: 1380080943120
 
 
 Query Subscribers
@@ -375,23 +372,24 @@ will contain at most one match.
     <tbody>
         <tr>
             <td>subscriberId</td>
-            <td style="text-align: center; font-weight:bold">&#x2713;</td>
+            <td style="text-align: center">yes</td>
             <td>Equal To</td>
         </tr>
         <tr>
             <td>countryId</td>
-            <td style="text-align: center; font-weight:bold">&#x2713;</td>
+            <td style="text-align: center">yes</td>
             <td>Equal To</td>
         </tr>
         <tr>
             <td>owningCarrierId</td>
-            <td style="text-align: center; font-weight:bold">&#x2713;</td>
+            <td style="text-align: center">yes</td>
             <td>Equal To</td>
         </tr>
     </tbody>
 </table>
 GET /network-elements/sonus-psx/{+ne_id}/subscribers{?subscriberId,countryId,owningCarrierId}
 < 200
+< Transaction-Id: 1380080943120
 < Content-Type: application/hal+json
 {
     "_links" : {
@@ -455,8 +453,15 @@ GET /network-elements/sonus-psx/{+ne_id}/subscribers{?subscriberId,countryId,own
 }
 +++++
 < 404
+< Transaction-Id: 1380080943120
+{
+    "errorCode": "ERR_REC_NOT_FOUND",
+    "summary": "Failed to 'Retrieve' entity.",
+    "detail": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" [^] xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" [^] xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">\n [^] <soapenv:Body>\n <soapenv:Fault>\n <faultcode>soapenv:Server.generalException</faultcode>\n <faultstring></faultstring>\n <detail>\n <ns1:fault href=\"#id0\" xmlns:ns1=\"http://www.sonusnet.com/ems/emsapi/psx/r07_03_06/intf\"/>\n [^] <ns2:exceptionName xmlns:ns2=\"http://xml.apache.org/axis/\">com.sonus.ems.api.psx.r07_03_06.model.ProvApiException</ns2:exceptionName>\n [^] </detail>\n </soapenv:Fault>\n <multiRef id=\"id0\" soapenc:root=\"0\" soapenv:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\" [^] xsi:type=\"ns3:ProvApiException\" xmlns:soapenc=\"http://schemas.xmlsoap.org/soap/encoding/\" [^] xmlns:ns3=\"http://www.sonusnet.com/ems/emsapi/psx/r07_03_06/model\">\n [^] <errorCode xsi:type=\"xsd:string\">ERR_REC_NOT_FOUND</errorCode>\n <message xsi:type=\"xsd:string\">Failed to 'Retrieve' entity.</message>\n <rootCause xsi:type=\"xsd:string\">(ERR_REC_NOT_FOUND) [resource] not found for the given criteria. (rc=17)</rootCause>\n </multiRef>\n </soapenv:Body>\n</soapenv:Envelope>"
+}
 +++++
 < 500
+< Transaction-Id: 1380080943120
 
 
 Update a subscriber. All fields are optional.
@@ -495,11 +500,13 @@ PUT /network-elements/sonus-psx/{+ne_id}/subscribers/{+id}
     "memberStatus" : -1
 }
 < 204
+< Transaction-Id: 1380080943120
 
 
 Delete a subscriber.
 DELETE /network-elements/sonus-psx/{+ne_id}/subscribers/{+id}
 < 204
+< Transaction-Id: 1380080943120
 
 
 --
@@ -512,6 +519,12 @@ Keys:
 
 * nationalId
 * countryId
+
+Refer to the **Sonus Insight API Programmer Guide** for descriptions, data types, defaults, and allowed values for
+request and response properties. Note:
+
+* If the Sonus documentation indicates a data type of integer, short, or long, the value will be numeric in the Loki REST JSON responses.
+* If the Sonus documentation indicates a data type of string, the value will be a string (or null) in the Loki REST JSON responses.
 --
 
 
@@ -543,9 +556,20 @@ POST /network-elements/sonus-psx/{+ne_id}/destinations
     "businessUnitId" : null
 }
 < 201
+< Transaction-Id: 1380080943120
 < Location: http://loki3services.apiary.io/loki-services/network-elements/sonus-psx/1/destinations/1-2005553001-1
 +++++
 < 500
+< Transaction-Id: 1380080943120
+
+
+Check if a destination exists.
+HEAD /network-elements/sonus-psx/{+ne_id}/destinations/{+id}
+< 204
+< Transaction-Id: 1380080943120
++++++
+< 404
+< Transaction-Id: 1380080943120
 
 
 Query Destinations
@@ -571,18 +595,19 @@ will contain at most one match.
     <tbody>
         <tr>
             <td>nationalId</td>
-            <td style="text-align: center; font-weight:bold">&#x2713;</td>
+            <td style="text-align: center">yes</td>
             <td>Equal To</td>
         </tr>
         <tr>
             <td>countryId</td>
-            <td style="text-align: center; font-weight:bold">&#x2713;</td>
+            <td style="text-align: center">yes</td>
             <td>Equal To</td>
         </tr>
     </tbody>
 </table>
 GET /network-elements/sonus-psx/{+ne_id}/destinations{?nationalId,countryId}
 < 200
+< Transaction-Id: 1380080943120
 < Content-Type: application/hal+json
 {
     "_links" : {
@@ -627,8 +652,15 @@ GET /network-elements/sonus-psx/{+ne_id}/destinations{?nationalId,countryId}
 }
 +++++
 < 404
+< Transaction-Id: 1380080943120
+{
+    "errorCode": "ERR_REC_NOT_FOUND",
+    "summary": "Failed to 'Retrieve' entity.",
+    "detail": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" [^] xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" [^] xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">\n [^] <soapenv:Body>\n <soapenv:Fault>\n <faultcode>soapenv:Server.generalException</faultcode>\n <faultstring></faultstring>\n <detail>\n <ns1:fault href=\"#id0\" xmlns:ns1=\"http://www.sonusnet.com/ems/emsapi/psx/r07_03_06/intf\"/>\n [^] <ns2:exceptionName xmlns:ns2=\"http://xml.apache.org/axis/\">com.sonus.ems.api.psx.r07_03_06.model.ProvApiException</ns2:exceptionName>\n [^] </detail>\n </soapenv:Fault>\n <multiRef id=\"id0\" soapenc:root=\"0\" soapenv:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\" [^] xsi:type=\"ns3:ProvApiException\" xmlns:soapenc=\"http://schemas.xmlsoap.org/soap/encoding/\" [^] xmlns:ns3=\"http://www.sonusnet.com/ems/emsapi/psx/r07_03_06/model\">\n [^] <errorCode xsi:type=\"xsd:string\">ERR_REC_NOT_FOUND</errorCode>\n <message xsi:type=\"xsd:string\">Failed to 'Retrieve' entity.</message>\n <rootCause xsi:type=\"xsd:string\">(ERR_REC_NOT_FOUND) [resource] not found for the given criteria. (rc=17)</rootCause>\n </multiRef>\n </soapenv:Body>\n</soapenv:Envelope>"
+}
 +++++
 < 500
+< Transaction-Id: 1380080943120
 
 
 Update a destination. All fields are optional.
@@ -649,11 +681,13 @@ PUT /network-elements/sonus-psx/{+ne_id}/destinations/{+id}
     "businessUnitId" : null
 }
 < 204
+< Transaction-Id: 1380080943120
 
 
 Delete a destination.
 DELETE /network-elements/sonus-psx/{+ne_id}/destinations/{+id}
 < 204
+< Transaction-Id: 1380080943120
 
 
 --
@@ -680,6 +714,12 @@ Keys:
 * timeRangeProfileId
 * callParamFilterProfileId
 * domainName
+
+Refer to the **Sonus Insight API Programmer Guide** for descriptions, data types, defaults, and allowed values for
+request and response properties. Note:
+
+* If the Sonus documentation indicates a data type of integer, short, or long, the value will be numeric in the Loki REST JSON responses.
+* If the Sonus documentation indicates a data type of string, the value will be a string (or null) in the Loki REST JSON responses.
 --
 
 
@@ -705,7 +745,7 @@ POST /network-elements/sonus-psx/{+ne_id}/routes
 	"destinationCountryId" : "1",
 	"partitionId" : "EXAMPLE_PARTITION",
 	"calltype" : 0,
-	"transmissionMedium" : "0",
+	"transmissionMedium" : 0,
 	"userCallType" : 0,
 	"digitType" : 2147483647,
 	"timeRangeProfileId" : "ALL",
@@ -714,9 +754,20 @@ POST /network-elements/sonus-psx/{+ne_id}/routes
 	"routingLabelId" : "EXAMPLE_RTNG_LBL"
 }
 < 201
+< Transaction-Id: 1380080943120
 < Location: http://loki3services.apiary.io/loki-services/network-elements/sonus-psx/1/routes/1-----0-3-2005553001-1-EXAMPLE_PARTITION-0-0-0-2147483647-ALL--
 +++++
 < 500
+< Transaction-Id: 1380080943120
+
+
+Check if a route exists.
+HEAD /network-elements/sonus-psx/{+ne_id}/routes/{+id}
+< 204
+< Transaction-Id: 1380080943120
++++++
+< 404
+< Transaction-Id: 1380080943120
 
 
 Query Routes
@@ -757,6 +808,7 @@ The URI query parameters are as follows:
 [future: pagination of results via offset and max; field parameter to specify included/excluded fields]
 GET /network-elements/sonus-psx/{+ne_id}/routes{?destinationNationalId,destinationCountryId,callProcessingElement1Id,callProcessingElement2Id,callProcessingElement3Id,callProcessingElement4Id,callProcessingElementType,routingType,partitionId,calltype,transmissionMedium,userCallType,digitType,timeRangeProfileId,callParamFilterProfileId,domainName}
 < 200
+< Transaction-Id: 1380080943120
 < Content-Type: application/hal+json
 {
     "_links" : {
@@ -791,7 +843,7 @@ GET /network-elements/sonus-psx/{+ne_id}/routes{?destinationNationalId,destinati
 	            "destinationCountryId" : "1",
 	            "partitionId" : "EXAMPLE_PARTITION",
 	            "calltype" : 0,
-	            "transmissionMedium" : "0",
+	            "transmissionMedium" : 0,
 	            "userCallType" : 0,
 	            "digitType" : 2147483647,
 	            "timeRangeProfileId" : "ALL",
@@ -804,8 +856,23 @@ GET /network-elements/sonus-psx/{+ne_id}/routes{?destinationNationalId,destinati
 }
 +++++
 < 404
+< Transaction-Id: 1380080943120
+{
+    "errorCode": "ERR_REC_NOT_FOUND",
+    "summary": "Failed to 'Retrieve' entity.",
+    "detail": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" [^] xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" [^] xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">\n [^] <soapenv:Body>\n <soapenv:Fault>\n <faultcode>soapenv:Server.generalException</faultcode>\n <faultstring></faultstring>\n <detail>\n <ns1:fault href=\"#id0\" xmlns:ns1=\"http://www.sonusnet.com/ems/emsapi/psx/r07_03_06/intf\"/>\n [^] <ns2:exceptionName xmlns:ns2=\"http://xml.apache.org/axis/\">com.sonus.ems.api.psx.r07_03_06.model.ProvApiException</ns2:exceptionName>\n [^] </detail>\n </soapenv:Fault>\n <multiRef id=\"id0\" soapenc:root=\"0\" soapenv:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\" [^] xsi:type=\"ns3:ProvApiException\" xmlns:soapenc=\"http://schemas.xmlsoap.org/soap/encoding/\" [^] xmlns:ns3=\"http://www.sonusnet.com/ems/emsapi/psx/r07_03_06/model\">\n [^] <errorCode xsi:type=\"xsd:string\">ERR_REC_NOT_FOUND</errorCode>\n <message xsi:type=\"xsd:string\">Failed to 'Retrieve' entity.</message>\n <rootCause xsi:type=\"xsd:string\">(ERR_REC_NOT_FOUND) [resource] not found for the given criteria. (rc=17)</rootCause>\n </multiRef>\n </soapenv:Body>\n</soapenv:Envelope>"
+}
++++++
+< 404
+< Transaction-Id: 1380080943120
+{
+    "errorCode": "ERR_REC_NOT_FOUND",
+    "summary": "Internal Error",
+    "detail": "Query returned no records"
+}
 +++++
 < 500
+< Transaction-Id: 1380080943120
 
 
 Update a route. All fields are optional.
@@ -815,11 +882,13 @@ PUT /network-elements/sonus-psx/{+ne_id}/routes/{+id}
     "routingLabelId" : "EXAMPLE_RTNG_LBL"
 }
 < 204
+< Transaction-Id: 1380080943120
 
 
 Delete a route.
 DELETE /network-elements/sonus-psx/{+ne_id}/routes/{+id}
 < 204
+< Transaction-Id: 1380080943120
 
 
 --
@@ -833,6 +902,12 @@ Keys:
 * (none)
 
 This is a meta-entity on Sonus, which provides enhanced search capabilities for Route entities.
+
+Refer to the **Sonus Insight API Programmer Guide** for descriptions, data types, defaults, and allowed values for
+request and response properties. Note:
+
+* If the Sonus documentation indicates a data type of integer, short, or long, the value will be numeric in the Loki REST JSON responses.
+* If the Sonus documentation indicates a data type of string, the value will be a string (or null) in the Loki REST JSON responses.
 --
 
 Query RouteQueries
@@ -867,9 +942,12 @@ The URI query parameters are as follows:
 **NOTE: As of 1.5, there is a defect in _embedded, making it inconsistent with the documentation below:
 it uses ls:route-queries and embeds the resources as route-queries, instead of as routes.**
 
+**Missing: detail of 404 response body**
+
 [future: pagination of results via offset and max; field parameter to specify included/excluded fields]
 GET /network-elements/sonus-psx/{+ne_id}/route-queries{?destinationNationalId,destinationCountryId,partitionId,callProcessingElement1Id,callProcessingElement2Id,callProcessingElement3Id,callProcessingElement4Id,routingLabelId,callParamFilterProfileId,domainName}
 < 200
+< Transaction-Id: 1380080943120
 < Content-Type: application/hal+json
 {
     "_links": {
@@ -898,16 +976,16 @@ GET /network-elements/sonus-psx/{+ne_id}/route-queries{?destinationNationalId,de
                 "callProcessingElement2Id": null,
                 "callProcessingElement3Id": null,
                 "callProcessingElement4Id": null,
-                "callProcessingElementType": "0",
-                "routingType": "3",
+                "callProcessingElementType": 0,
+                "routingType": 3,
                 "destinationNationalId": "4152141208",
                 "destinationCountryId": "1",
                 "partitionId": "EXAMPLE_PARTITION",
-                "calltype": "50176",
+                "calltype": 50176,
                 "routingLabelId": "EXAMPLE_LBL",
-                "transmissionMedium": "8191",
-                "userCallType": "0",
-                "digitType": "2147483647",
+                "transmissionMedium": 8191,
+                "userCallType": 0,
+                "digitType": 2147483647,
                 "timeRangeProfileId": "ALL",
                 "callParamFilterProfileId": null,
                 "domainName": null
@@ -924,16 +1002,16 @@ GET /network-elements/sonus-psx/{+ne_id}/route-queries{?destinationNationalId,de
                 "callProcessingElement2Id": null,
                 "callProcessingElement3Id": null,
                 "callProcessingElement4Id": null,
-                "callProcessingElementType": "0",
-                "routingType": "3",
+                "callProcessingElementType": 0,
+                "routingType": 3,
                 "destinationNationalId": "4165551212",
                 "destinationCountryId": "1",
                 "partitionId": "EXAMPLE_PARTITION",
-                "calltype": "50176",
+                "calltype": 50176,
                 "routingLabelId": "EXAMPLE_LBL",
-                "transmissionMedium": "511",
-                "userCallType": "0",
-                "digitType": "2147483647",
+                "transmissionMedium": 511,
+                "userCallType": 0,
+                "digitType": 2147483647,
                 "timeRangeProfileId": "ALL",
                 "callParamFilterProfileId": null,
                 "domainName": null
@@ -943,8 +1021,15 @@ GET /network-elements/sonus-psx/{+ne_id}/route-queries{?destinationNationalId,de
 }
 +++++
 < 404
+< Transaction-Id: 1380080943120
+{
+    "errorCode": "ERR_REC_NOT_FOUND",
+    "summary": "Internal Error",
+    "detail": "Query returned no records"
+}
 +++++
 < 500
+< Transaction-Id: 1380080943120
 
 
 --
@@ -1011,6 +1096,10 @@ POST /process-engine/process
             "isActive" : true,
             "busyRedirectToVoiceMail" : true,
             "noAnswerRedirectToVoiceMail" : true,
+            "serverSelection" : "User Specific Mail Server",
+            "userServer" : "4165557000",
+            "mailboxIdType" : "URL",
+            "mailboxURL" : "2005553001@sip.example.com",
             "noAnswerNumberOfRings" : 4,
             "alwaysRedirectToVoiceMail" : false,
             "outOfPrimaryZoneRedirectToVoiceMail" : false
@@ -1027,6 +1116,7 @@ POST /process-engine/process
     }
 }
 < 200
+< Transaction-Id: 1380080943120
 < Content-Type: application/hal+json
 {
     "_links" : {
@@ -1089,6 +1179,10 @@ POST /process-engine/process
                         "isActive": true,
                         "busyRedirectToVoiceMail": true,
                         "noAnswerRedirectToVoiceMail": true,
+                        "serverSelection" : "User Specific Mail Server",
+                        "userServer" : "4165557000",
+                        "mailboxIdType" : "URL",
+                        "mailboxURL" : "2005553001@sip.example.com",
                         "noAnswerNumberOfRings": 4,
                         "alwaysRedirectToVoiceMail": false,
                         "outOfPrimaryZoneRedirectToVoiceMail" : false
@@ -1109,10 +1203,11 @@ POST /process-engine/process
 }
 +++++
 < 424
+< Transaction-Id: 1380080943120
 < Content-Type: application/json
 {
     "errorCode" : "EXTERNAL_API_ERROR",
-    "externalErrorCode" : 4250,
+    "externalErrorCode" : "4250",
     "externalErrorSummary" : "[Warning 4250] 1 phone number(s) not added.  Verify that the number(s) are not already assigned.",
     "externalErrorDetail" : "[Warning 4250] 1 phone number(s) not added.  Verify that the number(s) are not already assigned."
 }
@@ -1144,7 +1239,7 @@ in which it's being used). This request specifically supports only the "createVo
     <tbody>
         <tr>
             <td>mode</td>
-            <td style="text-align: center; font-weight:bold">&#x2717;</td>
+            <td style="text-align: center">no</td>
             <td>prevalidate-and-create</td>
             <td>Controls execution mode as described in **ref general documentation.<br />
             Allowed values: [ "prevalidate-only", "prevalidate-and-create", "create-only" ].<br />
@@ -1194,6 +1289,10 @@ POST /broadworks/phone-numbers
             "isActive": true,
             "busyRedirectToVoiceMail": true,
             "noAnswerRedirectToVoiceMail": true,
+            "serverSelection" : "User Specific Mail Server",
+            "userServer" : "4165557000",
+            "mailboxIdType" : "URL",
+            "mailboxURL" : "2005553001@sip.example.com",
             "noAnswerNumberOfRings": 4,
             "alwaysRedirectToVoiceMail": false,
             "outOfPrimaryZoneRedirectToVoiceMail" : false
@@ -1210,6 +1309,7 @@ POST /broadworks/phone-numbers
     }
 }
 < 201
+< Transaction-Id: 1380080943120
 < Content-Type: application/hal+json
 {
     "_links" : {
@@ -1266,7 +1366,7 @@ in the request and will be present in the response.
     <tbody>
         <tr>
             <td>mode</td>
-            <td style="text-align: center; font-weight:bold">&#x2717;</td>
+            <td style="text-align: center">no</td>
             <td>prevalidate-and-create</td>
             <td>Controls execution mode as described in **ref general documentation.<br />
             Allowed values: [ "prevalidate-only", "prevalidate-and-create", "create-only" ].<br />
@@ -1275,7 +1375,7 @@ in the request and will be present in the response.
         </tr>
         <tr>
             <td>auto-increase</td>
-            <td style="text-align: center; font-weight:bold">&#x2717;</td>
+            <td style="text-align: center">no</td>
             <td>always</td>
             <td>Controls whether various BroadWorks limits (Group user limit; service authorizations) are automatically increased when adding users.<br />
             Allowed values: [ "always", "never", "enterprise-only" ].<br />
@@ -1325,6 +1425,10 @@ POST /broadworks/users
             "isActive": true,
             "busyRedirectToVoiceMail": true,
             "noAnswerRedirectToVoiceMail": true,
+            "serverSelection" : "User Specific Mail Server",
+            "userServer" : "4165557000",
+            "mailboxIdType" : "URL",
+            "mailboxURL" : "2005553001@sip.example.com",
             "noAnswerNumberOfRings": 4,
             "alwaysRedirectToVoiceMail": false,
             "outOfPrimaryZoneRedirectToVoiceMail" : false
@@ -1341,6 +1445,7 @@ POST /broadworks/users
     }
 }
 < 201
+< Transaction-Id: 1380080943120
 < Location: http://loki3services.apiary.io/loki-services/broadworks/serviceProviders/exampleCom/users/2005553001%40example.com
 < Content-Type: application/hal+json
 {
@@ -1383,16 +1488,19 @@ POST /broadworks/users
 }
 
 
-Process Step: Configure BroadWorks User Services (for voip-users input type)
+Process Step: Assign BroadWorks User Services (for voip-users input type)
 
-Configures services on a User in BroadWorks. For use as a step in a process within the Process Customization framework.
+Assigns services on a User in BroadWorks. For use as a step in a process within the Process Customization framework.
 Understands how to complete the necessary provisioning based on various types of input (depending on the process
-in which it's being used). This request specifically supports only the "createVoipUsers" process is supported.
+in which it's being used). This request specifically supports only the "createVoipUsers" process.
+
+Note that this may assign services not included in the inputs, depending on the configuration. For example, for most user
+types, the server will always assign Authentication even if it's missing from the inputs.
 
 Note: the input body may contain additional embedded resources (from previous process steps). Only those explicilty
 required are shown in the example.
 
-=##URI Query Parameters
+##URI Query Parameters
 
 <table border=1>
     <thead>
@@ -1404,7 +1512,202 @@ required are shown in the example.
     <tbody>
         <tr>
             <td>mode</td>
-            <td style="text-align: center; font-weight:bold">&#x2717;</td>
+            <td style="text-align: center">no</td>
+            <td>prevalidate-and-update</td>
+            <td>Controls execution mode as described in **ref general documentation.<br />
+            Allowed values: [ "prevalidate-only", "prevalidate-and-update", "update-only" ].<br />
+            <b>NOTE: at this time only "create-only" is allowed.</b>
+            </td>
+        </tr>
+    </tbody>
+</table>
+POST /broadworks/assignUserServices
+> Content-Type: application/hal+json
+{
+    "process" : "createVoipUser",
+    "customerId" : "exampleCom",
+    "siteId" : "exampleComNorth",
+    "userId": "2005553001@example.com",
+    "phoneNumber": "+1-2005553001",
+    "tnRoutine" : "auto",
+    "CLID" : "+1-2005553001",
+    "extension": "3001",
+    "lastName": "Doe",
+    "firstName": "Jane",
+    "callingLineIdLastName" : "Smith",
+    "callingLineIdFirstName" : "John",
+    "email": "jdoe@another.example.com",
+    "timeZone": "America/New_York",
+    "language" : "English",
+    "sharedDeviceName": "iad_exampleCom001",
+    "trunkGroupName" : "exampleTrunk",
+    "servicePacks": {
+        "base": "Standard",
+        "add-on": [
+            "Executive"
+        ]
+    },
+    "services": {
+        "Authentication": {
+            "username": "2005553001",
+            "password": "230A4u$#%f"
+        },
+        "Charge Number": {
+            "phoneNumber": "+1-2005554321",
+            "tnRoutine" : "",
+            "useChargeNumberForEnhancedTranslations": false,
+            "sendChargeNumberToNetwork": true
+        },
+        "Third-Party Voice Mail Support": {
+            "isActive": true,
+            "busyRedirectToVoiceMail": true,
+            "noAnswerRedirectToVoiceMail": true,
+            "serverSelection" : "User Specific Mail Server",
+            "userServer" : "4165557000",
+            "mailboxIdType" : "URL",
+            "mailboxURL" : "2005553001@sip.example.com",
+            "noAnswerNumberOfRings": 4,
+            "alwaysRedirectToVoiceMail": false,
+            "outOfPrimaryZoneRedirectToVoiceMail" : false
+        },
+        "Call Forwarding No Answer": {
+            "isActive": true,
+            "forwardToPhoneNumber": "+1-2005553101",
+            "numberOfRings": 4
+        },
+        "Call Forwarding Not Reachable" : {
+            "isActive" : true,
+            "forwardToPhoneNumber" : "+1-2005553101"
+        }
+    },
+        "curies" : [
+        {
+            "name" : "ls",
+            "href" : "http://loki3services.apiary.io/loki-services/rels/{rel}",
+            "templated" : true
+        }
+    ],
+    "_embedded" : {
+        "ls:broadworks-users" : [
+            {
+                "_links" : {
+                    "self" : {
+                        "href" : "http://loki3services.apiary.io/loki-services/broadworks/serviceProviders/exampleCom/users/2005553001%40example.com"
+                    }
+                },
+                "phoneNumber" : "+1-2005553001",
+                "extension" : "3001",
+                "CLID" : "+1-2005553001",
+                "userId" : "2005553001@example.com",
+                "portalPassword" : "s8F!9ggo",
+                "firstName" : "John",
+                "lastName" : "Smith",
+                "callingLineIdLastName" : "Smith",
+                "callingLineIdFirstName" : "John",
+                "timeZone": "America/New_York",
+                "language" : "English",
+            }
+        ],
+        "etc" : "various embedded resources may be present here (phone-number, device, etc)"
+    }
+}
+< 200
+< Transaction-Id: 1380080943120
+< Content-Type: application/hal+json
+{
+    "_links" : {
+        "self" : {
+            "href" : "http://loki3services.apiary.io/loki-services/broadworks/configureUserServices"
+        }
+    },
+    "curies" : [
+        {
+            "name" : "ls",
+            "href" : "http://loki3services.apiary.io/loki-services/rels/{rel}",
+            "templated" : true
+        }
+    ],
+    "_embedded" : {
+        "ls:broadworks-users" : [
+            {
+                "_links" : {
+                    "self" : {
+                        "href" : "http://loki3services.apiary.io/loki-services/broadworks/serviceProviders/exampleCom/users/2005553001%40example.com"
+                    }
+                },
+                "phoneNumber" : "+1-2005553001",
+                "extension" : "3001",
+                "CLID" : "+1-2005553001",
+                "userId" : "2005553001@example.com",
+                "portalPassword" : "s8F!9ggo",
+                "firstName" : "John",
+                "lastName" : "Smith",
+                "callingLineIdLastName" : "Smith",
+                "callingLineIdFirstName" : "John",
+                "timeZone": "America/New_York",
+                "language" : "English",
+                "services" : {
+                    "Authentication": {
+                        "username": "2005553001",
+                        "password": "230A4u$#%f"
+                    },
+                    "Charge Number": {
+                        "phoneNumber": "+1-2005554321",
+                        "tnRoutine" : "",
+                        "useChargeNumberForEnhancedTranslations": false,
+                        "sendChargeNumberToNetwork": true
+                    },
+                    "Third-Party Voice Mail Support": {
+                        "isActive": true,
+                        "busyRedirectToVoiceMail": true,
+                        "noAnswerRedirectToVoiceMail": true,
+                        "serverSelection" : "User Specific Mail Server",
+                        "userServer" : "4165557000",
+                        "mailboxIdType" : "URL",
+                        "mailboxURL" : "2005553001@sip.example.com",
+                        "noAnswerNumberOfRings": 4,
+                        "alwaysRedirectToVoiceMail": false,
+                        "outOfPrimaryZoneRedirectToVoiceMail" : false
+                    },
+                    "Call Forwarding No Answer": {
+                        "isActive": true,
+                        "forwardToPhoneNumber": "+1-2005553101",
+                        "numberOfRings": 4
+                    },
+                    "Call Forwarding Not Reachable" : {
+                        "isActive" : true,
+                        "forwardToPhoneNumber" : "+1-2005553101"
+                    }
+                }
+            }
+        ],
+        "etc" : "any embedded resources from the request (phone-number, device, etc) will be included here"
+    }
+}
+
+
+Process Step: Configure BroadWorks User Services (for voip-users input type)
+
+Configures services on a User in BroadWorks. For use as a step in a process within the Process Customization framework.
+Understands how to complete the necessary provisioning based on various types of input (depending on the process
+in which it's being used). This request specifically supports only the "createVoipUsers" process is supported.
+
+Note: the input body may contain additional embedded resources (from previous process steps). Only those explicilty
+required are shown in the example.
+
+##URI Query Parameters
+
+<table border=1>
+    <thead>
+    <th>Parameter</th>
+    <th>Required?</th>
+    <th>Default</th>
+    <th>Description</th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>mode</td>
+            <td style="text-align: center">no</td>
             <td>prevalidate-and-update</td>
             <td>Controls execution mode as described in **ref general documentation.<br />
             Allowed values: [ "prevalidate-only", "prevalidate-and-update", "update-only" ].<br />
@@ -1458,6 +1761,10 @@ POST /broadworks/configureUserServices
             "isActive": true,
             "busyRedirectToVoiceMail": true,
             "noAnswerRedirectToVoiceMail": true,
+            "serverSelection" : "User Specific Mail Server",
+            "userServer" : "4165557000",
+            "mailboxIdType" : "URL",
+            "mailboxURL" : "2005553001@sip.example.com",
             "noAnswerNumberOfRings": 4,
             "alwaysRedirectToVoiceMail": false,
             "outOfPrimaryZoneRedirectToVoiceMail" : false
@@ -1504,6 +1811,7 @@ POST /broadworks/configureUserServices
     }
 }
 < 200
+< Transaction-Id: 1380080943120
 < Content-Type: application/hal+json
 {
     "_links" : {
@@ -1552,6 +1860,10 @@ POST /broadworks/configureUserServices
                         "isActive": true,
                         "busyRedirectToVoiceMail": true,
                         "noAnswerRedirectToVoiceMail": true,
+                        "serverSelection" : "User Specific Mail Server",
+                        "userServer" : "4165557000",
+                        "mailboxIdType" : "URL",
+                        "mailboxURL" : "2005553001@sip.example.com",
                         "noAnswerNumberOfRings": 4,
                         "alwaysRedirectToVoiceMail": false,
                         "outOfPrimaryZoneRedirectToVoiceMail" : false
@@ -1574,339 +1886,7 @@ POST /broadworks/configureUserServices
 
 
 --
-BroadWorks System - General
-
-Network Element: BroadWorks (initially only supports XSP or AS resources)
-
-Various resources providing general internal services at the System level.
-
-General note: any of these requests may return 424 Method Failure in the event of an error response from BroadWorks,
-or 400 Bad Request for validation failure on the body, uri query parameters, or uri template variables, or 500 Internal
-Server Error for unhandled errors. However, for brevity, examples of these responses are only included for some
-resources/methods below.
---
-
-Retrieve the Systems's domains, including the default domain.
-
-Note the "domains" property, if present, will always be an array (even if it has only one element)  .
-GET /broadworks/domains
-< 200
-< Content-Type: application/hal+json
-{
-    "_links" : {
-        "self" : {
-            "href" : "http://loki3services.apiary.io/loki-services/broadworks/domains"
-        }
-    },
-    "curies" : [
-        {
-            "name" : "ls",
-            "href" : "http://loki3services.apiary.io/loki-services/rels/{rel}",
-            "templated" : true
-        }
-    ],
-    "systemDefaultDomain" : "example.com",
-    "domains" : [
-        "another.example.com",
-        "last.example.com"
-    ]
-}
-
-Retrieve the Systems's list of defined languages, including the default language.
-GET /broadworks/languages
-< 200
-< Content-Type: application/hal+json
-{
-    "_links" : {
-        "self" : {
-            "href" : "http://loki3services.apiary.io/loki-services/broadworks/languages"
-        }
-    },
-    "curies" : [
-        {
-            "name" : "ls",
-            "href" : "http://loki3services.apiary.io/loki-services/rels/{rel}",
-            "templated" : true
-        }
-    ],
-    "defaultLanguage": "English",
-    "languageTable": [
-        {
-            "Language": "English",
-            "Locale": "en_US",
-            "Encoding": "ISO-8859-1"
-        },
-        {
-            "Language": "French",
-            "Locale": "fr_CA",
-            "Encoding": "ISO-8859-1"
-        }
-    ]
-}
-
-
-
---
-BroadWorks Service Providers - General
-
-Network Element: BroadWorks (initially only supports XSP or AS resources)
-
-Various resources providing general internal services at the Enterprise/Service Provider level.
-
-General note: any of these requests may return 424 Method Failure in the event of an error response from BroadWorks,
-or 400 Bad Request for validation failure on the body, uri query parameters, or uri template variables, or 500 Internal
-Server Error for unhandled errors. However, for brevity, examples of these responses are only included for some
-resources/methods below.
---
-
-Retrieve the Service Provider's assigned domains, including it's default domain.
-
-Note the "domains" property, if present, will always be an array (even if it has only one element)  .
-GET /broadworks/service-providers/{+serviceProviderId}/domains
-< 200
-< Content-Type: application/hal+json
-{
-    "_links" : {
-        "self" : {
-            "href" : "http://loki3services.apiary.io/loki-services/broadworks/service-providers/Example%20Com/domains"
-        }
-    },
-    "curies" : [
-        {
-            "name" : "ls",
-            "href" : "http://loki3services.apiary.io/loki-services/rels/{rel}",
-            "templated" : true
-        }
-    ],
-    "serviceProviderId" : "Example Com",
-    "serviceProviderDefaultDomain" : "example.com",
-    "domains" : [
-        "another.example.com",
-        "last.example.com"
-    ]
-}
-
-
---
-BroadWorks Service Providers - Phone Numbers
-
-Network Element: BroadWorks (initially only supports XSP or AS resources)
-
-Provides all internal services related to BroadWorks phone number (TN) resources at the Enterprise/Service Provider level.
-
-General note: any of these requests may return 424 Method Failure in the event of an error response from BroadWorks,
-or 400 Bad Request for validation failure on the body, uri query parameters, or uri template variables, or 500 Internal
-Server Error for unhandled errors. However, for brevity, examples of these responses are only included for some
-resources/methods below.
---
-
-Assign a single phone number (TN) to an Enterprise or Service Provider.
-
-Note that the 424 example is just one example of a possible BroadWorks error.
-POST /broadworks/service-providers/{+serviceProviderId}/phone-numbers
-> Content-Type: application/json
-{
-    "phoneNumber" : "+1-2005553001"
-}
-< 201
-< Location: http://loki3services.apiary.io/loki-services/broadworks/serviceProviders/exampleCom/phone-numbers/%2B1-2005553001
-+++++
-< 424
-< Content-Type: application/json
-{
-    "errorCode" : "EXTERNAL_API_ERROR",
-    "externalErrorCode" : 4250,
-    "externalErrorSummary" : "[Warning 4250] 1 phone number(s) not added.  Verify that the number(s) are not already assigned.",
-    "ThexternalErrorDetail" : "[Warning 4250] 1 phone number(s) not added.  Verify that the number(s) are not already assigned."
-}
-
-
-Check existence of an individual phone number in an Enterprise or Service Provider.
-HEAD /broadworks/service-providers/{+serviceProviderId}/phone-numbers/{+phoneNumber}
-< 204
-+++++
-< 404
-
-
-Retrieve an individual phone number from an Enterprise or Service Provider.
-
-**NOTE: most likely the embedded groupId should be removed here; this GET shouldn't be attempting to construct
-broadworks-groups resource representations itself, and it would be wasteful to do an actual GET on /groups to
-fetch the group resource.**
-
-***NOT IMPLEMENTED as of 1.3; decide if _embedded service-provider stays or not***
-GET /broadworks/service-providers/{+serviceProviderId}/phone-numbers/{+phoneNumber}
-< 200
-< Content-Type: application/hal+json
-{
-    "_links" : {
-        "self" : {
-            "href" : "http://loki3services.apiary.io/loki-services/broadworks/service-providers/Example%20Com/phone-numbers/%2B1-2005551212"
-        }
-    },
-    "curies" : [
-        {
-            "name" : "ls",
-            "href" : "http://loki3services.apiary.io/loki-services/rels/{rel}",
-            "templated" : true
-        }
-    ],
-    "_embedded" : {
-        "ls:broadworks-service-providers" : [
-            {
-                "_links" : {
-                    "self" : {
-                        "href" : "http://loki3services.apiary.io/loki-services/broadworks/serviceProviders/exampleCom/groups/exampleComNorth"
-                    }
-                },
-                "serviceProviderId" : "Example Com"
-            }
-        ]
-    },
-    "serviceProviderId" : "Example Com",
-    "phoneNumber" : "+1-2005551212",
-    "canDelete" : true
-}
-+++++
-< 404
-
-
-Unassign a phone number from an Enterprise or a Service Provider.
-
-This request makes no attempt to check if the TN is actually assigned on the Enterprise/Service Provider,
-nor does it check to see if the TN allowed to be deleted. In future we may choose to use
-“GET /broadworks/service-providers/{+serviceProviderId}/phone-numbers/{+phoneNumber}” to first check for existence and
-verify that the TN is allowed to be deleted; in which case we could return 404 if the TN isn't assigned
-on the ent/SP, or another 4xx if it's assigned but not allowed to be deleted (e.g. if it's assigned
-to a Group).
-DELETE /broadworks/service-providers/{+serviceProviderId}/phone-numbers/{+phoneNumber}
-< 204
-
-
---
-BroadWorks Service Providers - Services
-
-Network Element: BroadWorks (initially only supports XSP or AS resources)
-
-Provides all internal services related to services (authorizations, service packs) at the Enterprise/Service Provider level.
-
-General note: any of these requests may return 424 Method Failure in the event of an error response from BroadWorks,
-or 400 Bad Request for validation failure on the body, uri query parameters, or uri template variables, or 500 Internal
-Server Error for unhandled errors. However, for brevity, examples of these responses are only included for some
-resources/methods below.
---
-
-Retrieve the Service Provider's service authorization detail.
-GET /broadworks/service-providers/{+serviceProviderId}/services
-< 200
-< Content-Type: application/hal+json
-{
-    "_links" : {
-        "self" : {
-            "href" : "http://loki3services.apiary.io/loki-services/broadworks/service-providers/Example%20Com/services"
-        }
-    },
-    "curies" : [
-        {
-            "name" : "ls",
-            "href" : "http://loki3services.apiary.io/loki-services/rels/{rel}",
-            "templated" : true
-        }
-    ],
-    "serviceProviderId" : "Example Com",
-    "groupServicesAuthorizationTable": {
-        "Account/Authorization Codes": {
-            "Service Name": "Account/Authorization Codes",
-            "Authorized": "true",
-            "Assigned": "false",
-            "Limited": "Unlimited",
-            "Quantity": null,
-            "Allocated": "1",
-            "Licensed": "true",
-            "Service Pack Allocation": "0"
-        },
-        "Auto Attendant": {
-            "Service Name": "Auto Attendant",
-            "Authorized": "true",
-            "Assigned": "false",
-            "Limited": "Limited",
-            "Quantity": "20",
-            "Allocated": "10",
-            "Licensed": "true",
-            "Service Pack Allocation": "0"
-        },
-        "etc" : "truncated for brevity"
-    },
-    "userServicesAuthorizationTable": {
-        "3G/4G Continuity" : {
-            "Service Name" : "3G/4G Continuity",
-            "Authorized" : "false",
-            "Assigned" : "false",
-            "Limited" : "Unlimited",
-            "Quantity" : null,
-            "Allocated" : "0",
-            "Licensed" : "false",
-            "Service Pack Allocation" : "0",
-            "User Assignable" : "true",
-            "Service Pack Assignable": "true"
-        },
-        "Advice Of Charge" : {
-            "Service Name" : "Advice Of Charge",
-            "Authorized" : "true",
-            "Assigned" : "false",
-            "Limited" : "Unlimited",
-            "Quantity" : null,
-            "Allocated" : "Unlimited",
-            "Licensed" : "true",
-            "Service Pack Allocation" : "0",
-            "User Assignable" : "true",
-            "Service Pack Assignable": "true"
-        },
-        "etc" : "truncated for brevity"
-    }
-}
-
-Update the Service Provider's service authorizations. Each of groupServicesAuthorizationTable and
-userServicesAuthorizationTable may contain zero or more entries (or be omitted entirely). Invalid combinations
-(for example, Authorized=false with Limited=Unlimited) may result in an 500 Internal Server Error
-or a 400 Bad Request, depending on the response from the BroadWorks Utility Service.
-PUT /broadworks/service-providers/{+serviceProviderId}/services
-> Content-Type: application/json
-{
-    "groupServicesAuthorizationTable": {
-        "Auto Attendant": {
-            "Authorized": "false"
-        },
-        "Group Paging": {
-            "Authorized": "true",
-            "Limited": "Unlimited"
-        },
-        "Hunt Group": {
-            "Authorized": "true",
-            "Limited": "Limited",
-            "Quantity": 20
-        }
-    },
-    "userServicesAuthorizationTable": {
-        "Remote Office": {
-            "Authorized": "false"
-        },
-        "Authentication": {
-            "Authorized": "true",
-            "Limited": "Unlimited"
-        },
-        "Call Waiting" : {
-            "Authorized": "true",
-            "Limited": "Limited",
-            "Quantity": 20
-        }
-    }
-}
-< 204
-
-
---
-BroadWorks Groups - General
+BroadWorks Entity - Groups
 
 Network Element: BroadWorks (initially only supports XSP or AS resources)
 
@@ -1923,14 +1903,44 @@ Retrieve information about a Group.
 Note that BroadWorks unfortunately omits the "-" in the callingLineIdPhoneNumber. At this time
 the BroadWorks value will be passed through unaltered in the response.
 
-Some properties are not included by default, unless their name is included as one of the values for the "view" URI query
-parameter (which accepts a comma-separated list of values). These are:
+The following properties are omitted from the response if they have no value set on the Group in BroadWorks:
 
-* extension-length
-* rules
-* ...?
+* groupName
+* callingLineIdName
+* callingLineIdPhoneNumber
+* callingLineIdDisplayPhoneNumber
+* locationDialingCode
+* contact
+* address
+
+##URI Query Parameters
+
+<table border=1>
+    <thead>
+    <th>Parameter</th>
+    <th>Required?</th>
+    <th>Default</th>
+    <th>Description</th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>view</td>
+            <td style="text-align: center">no</td>
+            <td>(empty)</td>
+            <td>Selects the view returned in the response.<br />
+            Allowed values: empty, or a comma-separated list of one or more of the following: [ "extension-length", "rules" ].<br />
+            Each view name corresponds to an object in the response body. If the view is named in the value of ?view, then the corresponding
+            object will be included in the response. <br />
+            When ?view is omitted or empty, none of the extra views will be included.<br />
+            </td>
+        </tr>
+    </tbody>
+</table>
+
+**KNOWN ISSUE: Currently the 200 OK response body includes an "ne_id" property which is not part of the specification.**
 GET /broadworks/service-providers/{+serviceProviderId}/groups/{+groupId}{?view}
 < 200
+< Transaction-Id: 1380080943120
 < Content-Type: application/hal+json
 {
     "_links" : {
@@ -1960,8 +1970,8 @@ GET /broadworks/service-providers/{+serviceProviderId}/groups/{+groupId}{?view}
     "serviceProviderId" : "Example Com",
     "groupId" : "Example Com - North",
     "defaultDomain": "r19.leonidsystems.com",
-    "userLimit": "6",
-    "userCount": "6",
+    "userLimit": 6,
+    "userCount": 6,
     "groupName": "exampleCom North",
     "callingLineIdName": "ExampleCOM North",
     "callingLineIdPhoneNumber" : "+15552112700",
@@ -1983,30 +1993,30 @@ GET /broadworks/service-providers/{+serviceProviderId}/groups/{+groupId}{?view}
         "country": "USA"
     },
     "extension-length" : {
-        "minExtensionLength": "2",
-        "maxExtensionLength": "6",
-        "defaultExtensionLength": "4"
+        "minExtensionLength": 2,
+        "maxExtensionLength": 6,
+        "defaultExtensionLength": 4
     },
     "rules" : {
         "password-rules" : {
-            "disallowUserId": "false",
-            "disallowOldPassword": "false",
-            "disallowReversedOldPassword": "false",
-            "restrictMinDigits": "false",
-            "minDigits": "1",
-            "restrictMinUpperCaseLetters": "false",
-            "minUpperCaseLetters": "1",
-            "restrictMinLowerCaseLetters": "false",
-            "minLowerCaseLetters": "1",
-            "restrictMinNonAlphanumericCharacters": "false",
-            "minNonAlphanumericCharacters": "1",
-            "minLength": "6",
-            "maxFailedLoginAttempts": "5",
-            "passwordExpiresDays": "30",
-            "sendLoginDisabledNotifyEmail": "false",
-            "disallowRulesModification": "false",
-            "disallowPreviousPasswords": "false",
-            "numberOfPreviousPasswords": "1"
+            "disallowUserId": false,
+            "disallowOldPassword": false,
+            "disallowReversedOldPassword": false,
+            "restrictMinDigits": false,
+            "minDigits": 1,
+            "restrictMinUpperCaseLetters": false,
+            "minUpperCaseLetters": 1,
+            "restrictMinLowerCaseLetters": false,
+            "minLowerCaseLetters": 1,
+            "restrictMinNonAlphanumericCharacters": false,
+            "minNonAlphanumericCharacters": 1,
+            "minLength": 6,
+            "maxFailedLoginAttempts": 5,
+            "passwordExpiresDays": 30,
+            "sendLoginDisabledNotifyEmail": false,
+            "disallowRulesModification": false,
+            "disallowPreviousPasswords": false,
+            "numberOfPreviousPasswords": 1
         }
     }
 }
@@ -2016,7 +2026,7 @@ PUT /broadworks/service-providers/{+serviceProviderId}/groups/{+groupId}
 > Content-Type: application/json
 {
     "defaultDomain": "r19.leonidsystems.com",
-    "userLimit": "6",
+    "userLimit": 6,
     "groupName": "exampleCom North",
     "callingLineIdName": "ExampleCOM North",
     "callingLineIdPhoneNumber" : "+1-5553112700",
@@ -2037,20 +2047,170 @@ PUT /broadworks/service-providers/{+serviceProviderId}/groups/{+groupId}
     }
 }
 < 204
+< Transaction-Id: 1380080943120
 +++++
 < 404
+< Transaction-Id: 1380080943120
 
 
-Retrieve the Group's assigned domains, including it's default domain.
+--
+BroadWorks Entity - Users
+
+Network Element: BroadWorks (initially only supports XSP or AS resources)
+
+Various resources providing general internal services at the System level.
+
+General note: any of these requests may return 424 Method Failure in the event of an error response from BroadWorks,
+or 400 Bad Request for validation failure on the body, uri query parameters, or uri template variables, or 500 Internal
+Server Error for unhandled errors. However, for brevity, examples of these responses are only included for some
+resources/methods below.
+--
+
+Retrieve a user's call processing policies - corresponds to User > Profile > Call Processing Policies in the BroadWorks CommPortal.
+Refer to OCI UserCallProcessingModifyPolicyRequest documentation for schema (data types, allowed values, etc).
+
+**NOT IMPLEMENTED**
+GET /broadworks/users/{+userId}/call-processing-policy
+< 200
+< Transaction-Id: 1380080943120
+< Content-Type: application/hal+json
+{
+    "_links": {
+        "self": {
+            "href": "http://loki3services.apiary.io/loki-services/broadworks/users/4155551212%20example.com/call-processing-policy"
+        }
+    },
+    "curies": [
+        {
+            "name": "ls",
+            "href": "http://loki3services.apiary.io/loki-services/rels/{rel}",
+            "templated": true
+        }
+    ],
+    "_embedded": {
+        "ls:broadworks-users": [
+            {
+                "_links": {
+                    "self": {
+                        "href": "http://loki3services.apiary.io/loki-services/broadworks/users/4155551212%20example.com"
+                    }
+                },
+                "userId": "4155551212@example.com"
+            }
+        ]
+    },
+    "userId" : "4155551212@example.com",
+    "callingLineId": {
+        "useUserCLIDSetting": false,
+        "clidPolicy": "Use DN",
+        "emergencyClidPolicy": "Use DN",
+        "allowAlternateNumbersForRedirectingIdentity": true,
+        "useGroupName": false,
+        "allowConfigurableCLIDForRedirectingIdentity": true,
+        "blockCallingNameForExternalCalls": false
+    },
+    "media": {
+        "useUserMediaSetting": false,
+        "mediaPolicySelection": "No Restrictions",
+        "supportedMediaSetName": "Example"
+    },
+    "callLimits": {
+        "useUserCallLimitsSetting": false,
+        "useMaxSimultaneousCalls": false,
+        "maxSimultaneousCalls": 10,
+        "useMaxSimultaneousVideoCalls": false,
+        "maxSimultaneousVideoCalls": 5,
+        "useMaxCallTimeForAnsweredCalls": false,
+        "maxCallTimeForAnsweredCallsMinutes": 600,
+        "useMaxCallTimeForUnansweredCalls": false,
+        "maxCallTimeForUnansweredCallsMinutes": 2,
+        "useMaxConcurrentRedirectedCalls": false,
+        "maxConcurrentRedirectedCalls": 3,
+        "useMaxFindMeFollowMeDepth": false,
+        "maxFindMeFollowMeDepth": 3,
+        "maxRedirectionDepth": 10,
+        "useMaxConcurrentFindMeFollowMeInvocations": false,
+        "maxConcurrentFindMeFollowMeInvocations": 3
+    },
+    "incomingCallerId": {
+        "useUserDCLIDSetting": false,
+        "enableDialableCallerID": false
+    }
+}
+
+
+Update a user's call processing policies - corresponds to User > Profile > Call Processing Policies in the BroadWorks CommPortal.
+Refer to OCI UserCallProcessingModifyPolicyRequest documentation for schema (data types, allowed values, etc).
+
+**NOT IMPLEMENTED**
+PUT /broadworks/users/{+userId}/call-processing-policy
+> Content-Type: application/json
+{
+    "callingLineId": {
+        "useUserCLIDSetting": false,
+        "clidPolicy": "Use DN",
+        "emergencyClidPolicy": "Use DN",
+        "allowAlternateNumbersForRedirectingIdentity": true,
+        "useGroupName": false,
+        "allowConfigurableCLIDForRedirectingIdentity": true,
+        "blockCallingNameForExternalCalls": false
+    },
+    "media": {
+        "useUserMediaSetting": false,
+        "mediaPolicySelection": "No Restrictions",
+        "supportedMediaSetName": "Example"
+    },
+    "callLimits": {
+        "useUserCallLimitsSetting": false,
+        "useMaxSimultaneousCalls": false,
+        "maxSimultaneousCalls": 10,
+        "useMaxSimultaneousVideoCalls": false,
+        "maxSimultaneousVideoCalls": 5,
+        "useMaxCallTimeForAnsweredCalls": false,
+        "maxCallTimeForAnsweredCallsMinutes": 600,
+        "useMaxCallTimeForUnansweredCalls": false,
+        "maxCallTimeForUnansweredCallsMinutes": 2,
+        "useMaxConcurrentRedirectedCalls": false,
+        "maxConcurrentRedirectedCalls": 3,
+        "useMaxFindMeFollowMeDepth": false,
+        "maxFindMeFollowMeDepth": 3,
+        "maxRedirectionDepth": 10,
+        "useMaxConcurrentFindMeFollowMeInvocations": false,
+        "maxConcurrentFindMeFollowMeInvocations": 3
+    },
+    "incomingCallerId": {
+        "useUserDCLIDSetting": false,
+        "enableDialableCallerID": false
+    }
+}
+< 204
+< Transaction-Id: 1380080943120
+
+
+--
+BroadWorks System - General
+
+Network Element: BroadWorks (initially only supports XSP or AS resources)
+
+Various resources providing general internal services at the System level.
+
+General note: any of these requests may return 424 Method Failure in the event of an error response from BroadWorks,
+or 400 Bad Request for validation failure on the body, uri query parameters, or uri template variables, or 500 Internal
+Server Error for unhandled errors. However, for brevity, examples of these responses are only included for some
+resources/methods below.
+--
+
+Retrieve the Systems's domains, including the default domain.
 
 Note the "domains" property, if present, will always be an array (even if it has only one element)  .
-GET /broadworks/service-providers/{+serviceProviderId}/groups/{+groupId}/domains
+GET /network-elements/broadworks/{+ne_id}/domains
 < 200
+< Transaction-Id: 1380080943120
 < Content-Type: application/hal+json
 {
     "_links" : {
         "self" : {
-            "href" : "http://loki3services.apiary.io/loki-services/broadworks/service-providers/Example%20Com/groups/Example%20Com%20-%20North/domains"
+            "href" : "http://loki3services.apiary.io/loki-services/network-elements/broadworks/1/domains"
         }
     },
     "curies" : [
@@ -2060,6 +2220,554 @@ GET /broadworks/service-providers/{+serviceProviderId}/groups/{+groupId}/domains
             "templated" : true
         }
     ],
+    "ne_id" : "1",
+    "systemDefaultDomain" : "example.com",
+    "domains" : [
+        "another.example.com",
+        "last.example.com"
+    ]
+}
+
+Retrieve the Systems's list of defined languages, including the default language.
+GET /network-elements/broadworks/{+ne_id}/languages
+< 200
+< Transaction-Id: 1380080943120
+< Content-Type: application/hal+json
+{
+    "_links" : {
+        "self" : {
+            "href" : "http://loki3services.apiary.io/loki-services/network-elements/broadworks/1/languages"
+        }
+    },
+    "curies" : [
+        {
+            "name" : "ls",
+            "href" : "http://loki3services.apiary.io/loki-services/rels/{rel}",
+            "templated" : true
+        }
+    ],
+    "ne_id" : "1",
+    "defaultLanguage": "English",
+    "languageTable": {
+        "English": {
+            "Language": "English",
+            "Locale": "en_US",
+            "Encoding": "ISO-8859-1"
+        },
+        "French" : {
+            "Language": "French",
+            "Locale": "fr_CA",
+            "Encoding": "ISO-8859-1"
+        }
+    }
+}
+
+Retrieve the Systems's list of defined time zones, including the default time zone.
+GET /network-elements/broadworks/{+ne_id}/time-zones
+< 200
+< Transaction-Id: 1380080943120
+< Content-Type: application/hal+json
+{
+    "_links" : {
+        "self" : {
+            "href" : "http://loki3services.apiary.io/loki-services/network-elements/broadworks/1/time-zones"
+        }
+    },
+    "curies" : [
+        {
+            "name" : "ls",
+            "href" : "http://loki3services.apiary.io/loki-services/rels/{rel}",
+            "templated" : true
+        }
+    ],
+    "ne_id" : "1",
+    "timeZoneTable": {
+        "Europe/Bucharest": {
+            "Key": "Europe/Bucharest",
+            "Display Name": "(GMT+02:00) Europe/Bucharest"
+        },
+        "America/St_Johns": {
+            "Key": "America/St_Johns",
+            "Display Name": "(GMT-03:30) (Canada) Newfoundland"
+        }
+    }
+}
+
+
+--
+BroadWorks Service Providers - General
+
+Network Element: BroadWorks (initially only supports XSP or AS resources)
+
+Various resources providing general internal services at the Enterprise/Service Provider level.
+
+General note: any of these requests may return 424 Method Failure in the event of an error response from BroadWorks,
+or 400 Bad Request for validation failure on the body, uri query parameters, or uri template variables, or 500 Internal
+Server Error for unhandled errors. However, for brevity, examples of these responses are only included for some
+resources/methods below.
+--
+
+Retrieve the Service Provider's assigned domains, including it's default domain.
+
+Note the "domains" property, if present, will always be an array (even if it has only one element)  .
+GET /network-elements/broadworks/{+ne_id}/service-providers/{+serviceProviderId}/domains
+< 200
+< Transaction-Id: 1380080943120
+< Content-Type: application/hal+json
+{
+    "_links" : {
+        "self" : {
+            "href" : "http://loki3services.apiary.io/loki-services/network-elements/broadworks/1/service-providers/Example%20Com/domains"
+        }
+    },
+    "curies" : [
+        {
+            "name" : "ls",
+            "href" : "http://loki3services.apiary.io/loki-services/rels/{rel}",
+            "templated" : true
+        }
+    ],
+    "ne_id" : "1",
+    "serviceProviderId" : "Example Com",
+    "serviceProviderDefaultDomain" : "example.com",
+    "domains" : [
+        "another.example.com",
+        "last.example.com"
+    ]
+}
+
+
+--
+BroadWorks Service Providers - Phone Numbers
+
+Network Element: BroadWorks (initially only supports XSP or AS resources)
+
+Provides all internal services related to BroadWorks phone number (TN) resources at the Enterprise/Service Provider level.
+
+General note: any of these requests may return 424 Method Failure in the event of an error response from BroadWorks,
+or 400 Bad Request for validation failure on the body, uri query parameters, or uri template variables, or 500 Internal
+Server Error for unhandled errors. However, for brevity, examples of these responses are only included for some
+resources/methods below.
+--
+
+Assign a single phone number (TN) to an Enterprise or Service Provider.
+
+Note that the 424 example is just one example of a possible BroadWorks error.
+POST /network-elements/broadworks/{+ne_id}/service-providers/{+serviceProviderId}/phone-numbers
+> Content-Type: application/json
+{
+    "phoneNumber" : "+1-2005553001"
+}
+< 201
+< Transaction-Id: 1380080943120
+< Location: http://loki3services.apiary.io/loki-services/network-elements/broadworks/1/serviceProviders/exampleCom/phone-numbers/%2B1-2005553001
++++++
+< 424
+< Transaction-Id: 1380080943120
+< Content-Type: application/json
+{
+    "errorCode" : "EXTERNAL_API_ERROR",
+    "externalErrorCode" : "4250",
+    "externalErrorSummary" : "[Warning 4250] 1 phone number(s) not added.  Verify that the number(s) are not already assigned.",
+    "ThexternalErrorDetail" : "[Warning 4250] 1 phone number(s) not added.  Verify that the number(s) are not already assigned."
+}
+
+
+Check existence of an individual phone number in an Enterprise or Service Provider.
+HEAD /network-elements/broadworks/{+ne_id}/service-providers/{+serviceProviderId}/phone-numbers/{+phoneNumber}
+< 204
+< Transaction-Id: 1380080943120
++++++
+< 404
+< Transaction-Id: 1380080943120
+
+
+Retrieve an individual phone number from an Enterprise or Service Provider.
+
+***NOTE: most likely the embedded service-provider should be removed here; this GET shouldn't be attempting to construct
+broadworks-groups resource representations itself, and it would be wasteful to do an actual GET on /groups to
+fetch the group resource. really, if we want a link to the service-provider here, use _links. ***
+
+**NOT IMPLEMENTED; also, need decide if _embedded service-provider stays, or changes to a _links entry, or just goes away**
+GET /network-elements/broadworks/{+ne_id}/service-providers/{+serviceProviderId}/phone-numbers/{+phoneNumber}
+< 200
+< Transaction-Id: 1380080943120
+< Content-Type: application/hal+json
+{
+    "_links" : {
+        "self" : {
+            "href" : "http://loki3services.apiary.io/loki-services/network-elements/broadworks/1/service-providers/Example%20Com/phone-numbers/%2B1-2005551212"
+        }
+    },
+    "curies" : [
+        {
+            "name" : "ls",
+            "href" : "http://loki3services.apiary.io/loki-services/rels/{rel}",
+            "templated" : true
+        }
+    ],
+    "_embedded" : {
+        "ls:broadworks-service-providers" : [
+            {
+                "_links" : {
+                    "self" : {
+                        "href" : "http://loki3services.apiary.io/loki-services/network-elements/broadworks/1/serviceProviders/Example%20Com"
+                    }
+                },
+                "ne_id" : "1",
+                "serviceProviderId" : "Example Com"
+            }
+        ]
+    },
+    "ne_id" : "1",
+    "serviceProviderId" : "Example Com",
+    "phoneNumber" : "+1-2005551212",
+    "canDelete" : true
+}
++++++
+< 404
+< Transaction-Id: 1380080943120
+
+
+Unassign a phone number from an Enterprise or a Service Provider.
+
+This request makes no attempt to check if the TN is actually assigned on the Enterprise/Service Provider,
+nor does it check to see if the TN allowed to be deleted. In future we may choose to use
+“GET /broadworks/service-providers/{+serviceProviderId}/phone-numbers/{+phoneNumber}” to first check for existence and
+verify that the TN is allowed to be deleted; in which case we could return 404 if the TN isn't assigned
+on the ent/SP, or another 4xx if it's assigned but not allowed to be deleted (e.g. if it's assigned
+to a Group).
+DELETE /network-elements/broadworks/{+ne_id}/service-providers/{+serviceProviderId}/phone-numbers/{+phoneNumber}
+< 204
+< Transaction-Id: 1380080943120
+
+
+--
+BroadWorks Service Providers - Services
+
+Network Element: BroadWorks (initially only supports XSP or AS resources)
+
+Provides all internal services related to services (authorizations, service packs) at the Enterprise/Service Provider level.
+
+General note: any of these requests may return 424 Method Failure in the event of an error response from BroadWorks,
+or 400 Bad Request for validation failure on the body, uri query parameters, or uri template variables, or 500 Internal
+Server Error for unhandled errors. However, for brevity, examples of these responses are only included for some
+resources/methods below.
+--
+
+Retrieve the Service Provider's service authorization detail.
+
+*In the current implementation, some properties can be misleading, please note:*
+
+* *When "Limited" is "Unlimited" or "none", then "Quantity" will be null. Otherwise, "Quantity" will be numeric.*
+* *Both "Allocated" and "Service Pack Allocation" are strings, and may have value "Unlimited" or may have the string representation of a numeric value.*
+GET /network-elements/broadworks/{+ne_id}/service-providers/{+serviceProviderId}/services
+< 200
+< Transaction-Id: 1380080943120
+< Content-Type: application/hal+json
+{
+    "_links" : {
+        "self" : {
+            "href" : "http://loki3services.apiary.io/loki-services/network-elements/broadworks/1/service-providers/Example%20Com/services"
+        }
+    },
+    "curies" : [
+        {
+            "name" : "ls",
+            "href" : "http://loki3services.apiary.io/loki-services/rels/{rel}",
+            "templated" : true
+        }
+    ],
+    "ne_id" : "1",
+    "serviceProviderId" : "Example Com",
+    "groupServicesAuthorizationTable": {
+        "Account/Authorization Codes": {
+            "Service Name": "Account/Authorization Codes",
+            "Authorized": true,
+            "Assigned": false,
+            "Limited": "Unlimited",
+            "Quantity": null,
+            "Allocated": 1,
+            "Licensed": true,
+            "Service Pack Allocation": 0
+        },
+        "Auto Attendant": {
+            "Service Name": "Auto Attendant",
+            "Authorized": true,
+            "Assigned": false,
+            "Limited": "Limited",
+            "Quantity": 20,
+            "Allocated": 10,
+            "Licensed": true,
+            "Service Pack Allocation": 0
+        },
+        "etc" : "truncated for brevity"
+    },
+    "userServicesAuthorizationTable": {
+        "3G/4G Continuity" : {
+            "Service Name" : "3G/4G Continuity",
+            "Authorized" : true,
+            "Assigned" : false,
+            "Limited" : "Unlimited",
+            "Quantity" : null,
+            "Allocated" : "Unlimited",
+            "Licensed" : true,
+            "Service Pack Allocation" : "Unlimited",
+            "User Assignable" : true,
+            "Service Pack Assignable": true
+        },
+        "Advice Of Charge" : {
+            "Service Name" : "Advice Of Charge",
+            "Authorized" : true,
+            "Assigned" : false,
+            "Limited" : "Unlimited",
+            "Quantity" : null,
+            "Allocated" : "Unlimited",
+            "Licensed" : true,
+            "Service Pack Allocation" : 0,
+            "User Assignable" : true,
+            "Service Pack Assignable": true
+        },
+        "etc" : "truncated for brevity"
+    }
+}
+
+Update the Service Provider's service authorizations. Each of groupServicesAuthorizationTable and
+userServicesAuthorizationTable may contain zero or more entries (or be omitted entirely). Invalid combinations
+(for example, Authorized=false with Limited=Unlimited) may result in an 500 Internal Server Error
+or a 400 Bad Request, depending on the response from the BroadWorks Utility Service.
+PUT /network-elements/broadworks/{+ne_id}/service-providers/{+serviceProviderId}/services
+> Content-Type: application/json
+{
+    "groupServicesAuthorizationTable": {
+        "Auto Attendant": {
+            "Authorized": false
+        },
+        "Group Paging": {
+            "Authorized": true,
+            "Limited": "Unlimited"
+        },
+        "Hunt Group": {
+            "Authorized": true,
+            "Limited": "Limited",
+            "Quantity": 20
+        }
+    },
+    "userServicesAuthorizationTable": {
+        "Remote Office": {
+            "Authorized": false
+        },
+        "Authentication": {
+            "Authorized": true,
+            "Limited": "Unlimited"
+        },
+        "Call Waiting" : {
+            "Authorized": true,
+            "Limited": "Limited",
+            "Quantity": 20
+        }
+    }
+}
+< 204
+< Transaction-Id: 1380080943120
+
+
+--
+BroadWorks Groups - General
+
+Network Element: BroadWorks (initially only supports XSP or AS resources)
+
+Various resources providing general internal services at the Group level.
+
+General note: any of these requests may return 424 Method Failure in the event of an error response from BroadWorks,
+or 400 Bad Request for validation failure on the body, uri query parameters, or uri template variables, or 500 Internal
+Server Error for unhandled errors. However, for brevity, examples of these responses are only included for some
+resources/methods below.
+--
+
+Retrieve information about a BroadWorks group.
+Corresponds to Group > Profile > Profile in the BroadWorks CommPortal.
+
+Note that BroadWorks unfortunately omits the "-" in the callingLineIdPhoneNumber. At this time
+the BroadWorks value will be passed through unaltered in the response.
+
+The following properties are omitted from the response if they have no value set on the group in BroadWorks:
+
+* groupName
+* callingLineIdName
+* callingLineIdPhoneNumber
+* callingLineIdDisplayPhoneNumber
+* locationDialingCode
+* contact
+* address
+GET /network-elements/broadworks/{+ne_id}/service-providers/{+serviceProviderId}/groups/{+groupId}
+< 200
+< Transaction-Id: 1380080943120
+< Content-Type: application/hal+json
+{
+    "_links" : {
+        "self" : {
+            "href" : "http://loki3services.apiary.io/loki-services/network-elements/broadworks/1/service-providers/Example%20Com/groups/Example%20Com%20-%20North"
+        }
+    },
+    "curies" : [
+        {
+            "name" : "ls",
+            "href" : "http://loki3services.apiary.io/loki-services/rels/{rel}",
+            "templated" : true
+        }
+    ],
+    "ne_id" : "1",
+    "serviceProviderId" : "Example Com",
+    "groupId" : "Example Com - North",
+    "defaultDomain": "r19.leonidsystems.com",
+    "userLimit": 6,
+    "userCount": 4,
+    "groupName": "exampleCom North",
+    "callingLineIdName": "ExampleCOM North",
+    "callingLineIdPhoneNumber" : "+15552112700",
+    "callingLineIdDisplayPhoneNumber" : "5552112700",
+    "timeZone": "America/St_Johns",
+    "timeZoneDisplayName": "(GMT-03:30) (Canada) Newfoundland",
+    "locationDialingCode": "415",
+    "contact": {
+        "contactName": "Billy",
+        "contactNumber": "Bishop",
+        "contactEmail": "billy@example.com"
+    },
+    "address": {
+        "addressLine1": "415 Sixth Ave",
+        "addressLine2": "Suite 102",
+        "city": "North Seventh",
+        "stateOrProvince": "Alabama",
+        "zipOrPostalCode": "50415",
+        "country": "USA"
+    }
+}
+
+
+Modify some or all editable properties of a BroadWorks group.
+Corresponds to Group > Profile > Profile in the BroadWorks CommPortal.
+PUT /network-elements/broadworks/{+ne_id}/service-providers/{+serviceProviderId}/groups/{+groupId}
+> Content-Type: application/json
+{
+    "defaultDomain": "r19.leonidsystems.com",
+    "userLimit": 6,
+    "groupName": "exampleCom North",
+    "callingLineIdName": "ExampleCOM North",
+    "callingLineIdPhoneNumber" : "+1-5553112700",
+    "timeZone": "America/St_Johns",
+    "locationDialingCode": "415",
+    "contact": {
+        "contactName": "Billy",
+        "contactNumber": "Bishop",
+        "contactEmail": "billy@example.com"
+    },
+    "address": {
+        "addressLine1": "415 Sixth Ave",
+        "addressLine2": "Suite 102",
+        "city": "North Seventh",
+        "stateOrProvince": "Alabama",
+        "zipOrPostalCode": "50415",
+        "country": "USA"
+    }
+}
+< 204
+< Transaction-Id: 1380080943120
+
+
+Retrieve the password rules for a group in BroadWorks.
+Corresponds to Group > Utilities > Password Rules in the BroadWorks CommPortal.
+GET /network-elements/broadworks/{+ne_id}/service-providers/{+serviceProviderId}/groups/{+groupId}/password-rules
+< 200
+< Transaction-Id: 1380080943120
+< Content-Type: application/hal+json
+{
+    "_links" : {
+        "self" : {
+            "href" : "http://loki3services.apiary.io/loki-services/network-elements/broadworks/1/service-providers/Example%20Com/groups/Example%20Com%20-%20North/password-rules"
+        }
+    },
+    "curies" : [
+        {
+            "name" : "ls",
+            "href" : "http://loki3services.apiary.io/loki-services/rels/{rel}",
+            "templated" : true
+        }
+    ],
+    "ne_id" : "1",
+    "serviceProviderId" : "Example Com",
+    "groupId" : "Example Com - North",
+    "disallowUserId": false,
+    "disallowOldPassword": false,
+    "disallowReversedOldPassword": false,
+    "restrictMinDigits": false,
+    "minDigits": 1,
+    "restrictMinUpperCaseLetters": false,
+    "minUpperCaseLetters": 1,
+    "restrictMinLowerCaseLetters": false,
+    "minLowerCaseLetters": 1,
+    "restrictMinNonAlphanumericCharacters": false,
+    "minNonAlphanumericCharacters": 1,
+    "minLength": 6,
+    "maxFailedLoginAttempts": 5,
+    "passwordExpiresDays": 30,
+    "sendLoginDisabledNotifyEmail": false,
+    "disallowRulesModification": false,
+    "disallowPreviousPasswords": false,
+    "numberOfPreviousPasswords": 1
+}
+
+
+Retrieve the extension length settings for a group in BroadWorks.
+Corresponds to Group > Utilities > Extension Dialing in the BroadWorks CommPortal.
+GET /network-elements/broadworks/{+ne_id}/service-providers/{+serviceProviderId}/groups/{+groupId}/extension-length
+< 200
+< Transaction-Id: 1380080943120
+< Content-Type: application/hal+json
+{
+    "_links" : {
+        "self" : {
+            "href" : "http://loki3services.apiary.io/loki-services/network-elements/broadworks/1/service-providers/Example%20Com/groups/Example%20Com%20-%20North/password-rules"
+        }
+    },
+    "curies" : [
+        {
+            "name" : "ls",
+            "href" : "http://loki3services.apiary.io/loki-services/rels/{rel}",
+            "templated" : true
+        }
+    ],
+    "ne_id" : "1",
+    "serviceProviderId" : "Example Com",
+    "groupId" : "Example Com - North",
+    "minExtensionLength": 2,
+    "maxExtensionLength": 6,
+    "defaultExtensionLength": 4
+}
+
+
+Retrieve the Group's assigned domains, including it's default domain.
+
+Note the "domains" property, if present, will always be an array (even if it has only one element)  .
+GET /network-elements/broadworks/{+ne_id}/service-providers/{+serviceProviderId}/groups/{+groupId}/domains
+< 200
+< Transaction-Id: 1380080943120
+< Content-Type: application/hal+json
+{
+    "_links" : {
+        "self" : {
+            "href" : "http://loki3services.apiary.io/loki-services/network-elements/broadworks/1/service-providers/Example%20Com/groups/Example%20Com%20-%20North/domains"
+        }
+    },
+    "curies" : [
+        {
+            "name" : "ls",
+            "href" : "http://loki3services.apiary.io/loki-services/rels/{rel}",
+            "templated" : true
+        }
+    ],
+    "ne_id" : "1",
     "serviceProviderId" : "Example Com",
     "groupId" : "Example Com - North",
     "groupDefaultDomain" : "example.com",
@@ -2085,34 +2793,38 @@ resources/methods below.
 --
 
 Assign a single phone number (TN) to a Group.
-POST broadworks/service-providers/{+serviceProviderId}/groups/{+groupId}/phone-numbers
+POST /network-elements/broadworks/{+ne_id}/service-providers/{+serviceProviderId}/groups/{+groupId}/phone-numbers
 > Content-Type: application/json
 {
     "phoneNumber" : "+1-2005553001"
 }
 < 201
-< Location: http://loki3services.apiary.io/loki-services/broadworks/serviceProviders/exampleCom/groups/exampleComNorth/phone-numbers/%2B1-2005553001
+< Transaction-Id: 1380080943120
+< Location: http://loki3services.apiary.io/loki-services/network-elements/broadworks/1/serviceProviders/exampleCom/groups/exampleComNorth/phone-numbers/%2B1-2005553001
 
 
 Check existence of an individual phone number in a Group.
-HEAD /broadworks/service-providers/{+serviceProviderId}/groups/{+groupId}/phone-numbers/{+phoneNumber}
+HEAD /network-elements/broadworks/{+ne_id}/service-providers/{+serviceProviderId}/groups/{+groupId}/phone-numbers/{+phoneNumber}
 < 204
+< Transaction-Id: 1380080943120
 +++++
 < 404
+< Transaction-Id: 1380080943120
 
 
 Retrieve an individual phone number from a Group.
 
 The embedded "ls:broadworks-users" resource is included only when the phone number is assigned to a user.
 
-***NOT IMPLEMENTED as of 1.3; note remember to add serviceProviderId in ther body***
-GET /broadworks/service-providers/{+serviceProviderId}/groups/{+groupId}/phone-numbers/{+phoneNumber}
+**NOT IMPLEMENTED; note link relation may be wrong, distinguish between utility-level and entity-level broadworks-users**
+GET /network-elements/broadworks/{+ne_id}/service-providers/{+serviceProviderId}/groups/{+groupId}/phone-numbers/{+phoneNumber}
 < 200
+< Transaction-Id: 1380080943120
 < Content-Type: application/hal+json
 {
     "_links" : {
         "self" : {
-            "href" : "http://loki3services.apiary.io/loki-services/broadworks/serviceProviders/Example%20Com/groups/Example%20Com%20-%20North/phone-numbers/%2B1-2005551212"
+            "href" : "http://loki3services.apiary.io/loki-services/network-elements/broadworks/1/serviceProviders/Example%20Com/groups/Example%20Com%20-%20North/phone-numbers/%2B1-2005551212"
         }
     },
     "curies" : [
@@ -2127,7 +2839,7 @@ GET /broadworks/service-providers/{+serviceProviderId}/groups/{+groupId}/phone-n
             {
                 "_links" : {
                     "self" : {
-                        "href" : "http://loki3services.apiary.io/loki-services/broadworks/users/2005553001%40example.com"
+                        "href" : "http://loki3services.apiary.io/loki-services/network-elements/broadworks/1/users/2005553001%40example.com"
                     }
                 },
                 "userId" : "2005553001@example.com",
@@ -2139,14 +2851,13 @@ GET /broadworks/service-providers/{+serviceProviderId}/groups/{+groupId}/phone-n
             }
         ]
     },
+    "ne_id" : "1",
     "serviceProviderId" : "Example Com",
     "groupId" : "Example Com - North",
     "phoneNumber" : "+1-2005551212",
     "department" : "Sales",
     "activated" : true
 }
-+++++
-< 404
 
 
 Unassign a phone number from a Group.
@@ -2157,8 +2868,9 @@ nor does it check to see if the TN allowed to be deleted. In future we may choos
 first check for existence and verify that the TN is allowed to be deleted; in which case we could return
 404 if the TN isn't assigned on the Group, or another 4xx if it's assigned but not allowed to be deleted
 (e.g. if it's assigned to a (v)User).
-DELETE /broadworks/service-providers/{+serviceProviderId}/groups/{+groupId}/phone-numbers/{+phoneNumber}
+DELETE /network-elements/broadworks/{+ne_id}/service-providers/{+serviceProviderId}/groups/{+groupId}/phone-numbers/{+phoneNumber}
 < 204
+< Transaction-Id: 1380080943120
 
 
 --
@@ -2175,13 +2887,19 @@ resources/methods below.
 --
 
 Retrieve the Group's service authorization detail.
-GET /broadworks/service-providers/{+serviceProviderId}/groups/{+groupId}/services
+
+*In the current implementation, some properties can be misleading, please note:*
+
+* *When "Limited" is "Unlimited" or "none", then "Quantity" will be null. Otherwise, "Quantity" will be numeric.*
+* *"Allocated" is a string, which may have value "Unlimited" or may have the string representation of a numeric value.*
+GET /network-elements/broadworks/{+ne_id}/service-providers/{+serviceProviderId}/groups/{+groupId}/services
 < 200
+< Transaction-Id: 1380080943120
 < Content-Type: application/hal+json
 {
     "_links" : {
         "self" : {
-            "href" : "http://loki3services.apiary.io/loki-services/broadworks/serviceProviders/Example%20Com/groups/Example%20Com%20-%20North/services"
+            "href" : "http://loki3services.apiary.io/loki-services/network-elements/broadworks/1/serviceProviders/Example%20Com/groups/Example%20Com%20-%20North/services"
         }
     },
     "curies" : [
@@ -2191,77 +2909,78 @@ GET /broadworks/service-providers/{+serviceProviderId}/groups/{+groupId}/service
             "templated" : true
         }
     ],
+    "ne_id" : "1",
     "serviceProviderId" : "Example Com",
     "groupId" : "Example Com - North",
     "servicePacksAuthorizationTable" : {
         "Admin" : {
             "Service Pack Name" : "Admin",
-            "Authorized" : "true",
-            "Assigned" : "false",
+            "Authorized" : true,
+            "Assigned" : false,
             "Limited" : "Limited",
-            "Allocated" : "10",
+            "Allocated" : 10,
             "Allowed" : "Unlimited",
-            "Usage" : "0",
+            "Usage" : 0,
             "Description" : null
         },
         "Standard" : {
             "Service Pack Name" : "Standard",
-            "Authorized" : "true",
-            "Assigned" : "false",
+            "Authorized" : true,
+            "Assigned" : false,
             "Limited" : "Unlimited",
             "Allocated" : null,
             "Allowed" : "Unlimited",
-            "Usage" : "5",
+            "Usage" : 5,
             "Description" : null
         }
     },
     "groupServicesAuthorizationTable": {
         "Account/Authorization Codes": {
             "Service Name": "Account/Authorization Codes",
-            "Authorized": "true",
-            "Assigned": "false",
+            "Authorized": true,
+            "Assigned": false,
             "Limited": "none",
             "Quantity": null,
             "Usage": "1",
-            "Licensed": "true",
+            "Licensed": true,
             "Allowed": "Unlimited"
         },
         "Auto Attendant": {
             "Service Name": "Auto Attendant",
-            "Authorized": "true",
-            "Assigned": "true",
+            "Authorized": true,
+            "Assigned": true,
             "Limited": "Limited",
-            "Quantity": "10",
-            "Usage": "0",
-            "Licensed": "true",
-            "Allowed": "20"
+            "Quantity": 10,
+            "Usage": 0,
+            "Licensed": true,
+            "Allowed": 20
         },
         "etc" : "truncated for brevity"
     },
     "userServicesAuthorizationTable": {
         "3G/4G Continuity" : {
             "Service Name" : "3G/4G Continuity",
-            "Authorized" : "true",
-            "Assigned" : "false",
+            "Authorized" : true,
+            "Assigned" : false,
             "Limited" : "Unlimited",
             "Quantity" : null,
-            "Usage" : "1",
-            "Licensed" : "false",
+            "Usage" : 1,
+            "Licensed" : false,
             "Allowed" : "Unlimited",
-            "User Assignable" : "true",
-            "Group Service Assignable": "true"
+            "User Assignable" : true,
+            "Group Service Assignable": true
         },
         "Advice Of Charge" : {
             "Service Name" : "Advice Of Charge",
-            "Authorized" : "true",
-            "Assigned" : "false",
+            "Authorized" : true,
+            "Assigned" : false,
             "Limited" : "Limited",
-            "Quantity" : "5",
-            "Usage" : "2",
-            "Licensed" : "true",
+            "Quantity" : 5,
+            "Usage" : 2,
+            "Licensed" : true,
             "Allowed" : "Unlimited",
-            "User Assignable" : "true",
-            "Group Service Assignable": "true"
+            "User Assignable" : true,
+            "Group Service Assignable": true
         },
         "etc" : "truncated for brevity"
     }
@@ -2273,50 +2992,51 @@ userServicesAuthorizationTable may contain zero or more entries (or be omitted e
 or a 400 Bad Request, depending on the response from the BroadWorks Utility Service.
 
 **Note in future this will likely be used also to assign/unassign Group Services**
-PUT /broadworks/service-providers/{+serviceProviderId}/groups/{+groupId}/services
+PUT /network-elements/broadworks/{+ne_id}/service-providers/{+serviceProviderId}/groups/{+groupId}/services
 > Content-Type: application/json
 {
     "servicePacksAuthorizationTable" : {
         "Admin" : {
-            "Authorized" : "true",
-            "Limited" : "Unlimited",
+            "Authorized" : true,
+            "Limited" : "Unlimited"
         },
         "Standard" : {
-            "Authorized" : "true",
+            "Authorized" : true,
             "Limited" : "Limited",
-            "Allocated" : "10"
+            "Allocated" : 10
         }
     },
     "groupServicesAuthorizationTable": {
         "Auto Attendant": {
-            "Authorized": "false"
+            "Authorized": false
         },
         "Group Paging": {
-            "Authorized": "true",
+            "Authorized": true,
             "Limited": "Unlimited"
         },
         "Hunt Group": {
-            "Authorized": "true",
+            "Authorized": true,
             "Limited": "Limited",
             "Quantity": 20
         }
     },
     "userServicesAuthorizationTable": {
         "Remote Office": {
-            "Authorized": "false"
+            "Authorized": false
         },
         "Authentication": {
-            "Authorized": "true",
+            "Authorized": true,
             "Limited": "Unlimited"
         },
         "Call Waiting" : {
-            "Authorized": "true",
+            "Authorized": true,
             "Limited": "Limited",
             "Quantity": 20
         }
     }
 }
 < 204
+< Transaction-Id: 1380080943120
 
 
 --
@@ -2336,12 +3056,11 @@ Create a BroadWorks User.
 
 Note that the request body includes both a device and a trunk group, for example purposes.
 Actual requests should include only one or the other (or neither, for users with no device).
-POST /broadworks/service-providers/{+serviceProviderId}/groups/{+groupId}/users
+POST /network-elements/broadworks/{+ne_id}/service-providers/{+serviceProviderId}/groups/{+groupId}/users
 > Content-Type: application/json
 {
     "userId": "2005553001@example.com",
     "phoneNumber": "+1-2005553001",
-    "tnRoutine": "auto",
     "CLID": "+1-2005553001",
     "extension": "3001",
     "lastName": "Doe",
@@ -2357,18 +3076,22 @@ POST /broadworks/service-providers/{+serviceProviderId}/groups/{+groupId}/users
         "level" : "Group"
     }
     "trunkGroupName" : "exampleTrunk"
+    "password" : "Fg3t&4s!D0"
 }
 < 201
-< Location: http://loki3services.apiary.io/loki-services/broadworks/serviceProviders/Example%20Com/groups/Example%20Com%20-%20North/users/2005553001%40example.com
+< Transaction-Id: 1380080943120
+< Location: http://loki3services.apiary.io/loki-services/network-elements/broadworks/1/serviceProviders/Example%20Com/groups/Example%20Com%20-%20North/users/2005553001%40example.com
 
 
 Delete a BroadWorks User
 
-** FIXME: remove service-provider and group from URI; they are not necessary when operating on a user.
-DELETE /broadworks/service-providers/{+serviceProviderId}/groups/{+groupId}/users/{+userId}
+**NOT IMPLEMENTED**
+DELETE /network-elements/broadworks/{+ne_id}/users/{+userId}
 < 204
+< Transaction-Id: 1380080943120
 +++++
 < 404
+< Transaction-Id: 1380080943120
 
 
 --
@@ -2401,7 +3124,7 @@ Assigning a service which is already assigned, or un-assigning a service which i
 everything except those that are included here with Assigned=true). May make this change, or, add a ?parameter here to.
 As it stands, to update a user to ensure they have only 1 service assigned, you'd have to list **every** other BWKS service
 with "Assigned=false" here.
-PUT /broadworks/users/{+userId}/services
+PUT /network-elements/broadworks/{+ne_id}/users/{+userId}/services
 > Content-Type: application/json
 {
     "servicePacksAssignmentTable" : {
@@ -2425,14 +3148,13 @@ PUT /broadworks/users/{+userId}/services
     }
 }
 < 204
+< Transaction-Id: 1380080943120
 
 
 Update settings for Authentication service on a user.
 
 Note: when connecting to BroadWorks as a BroadWorks user (rather than as an admin), if "password" is included then "oldPassword" is also required.
-
-** FIXME: remove service-provider and group from URI; they are not necessary when operating on a user.
-PUT /broadworks/service-providers/{+serviceProviderId}/groups/{+groupId}/users/{+userId}/services/Authentication
+PUT /network-elements/broadworks/{+ne_id}/users/{+userId}/services/Authentication
 > Content-Type: application/json
 {
     "username" : "2005553001",
@@ -2440,27 +3162,25 @@ PUT /broadworks/service-providers/{+serviceProviderId}/groups/{+groupId}/users/{
     "password" : "230A4u$#%f"
 }
 < 204
+< Transaction-Id: 1380080943120
 
 
 Update settings for Charge Number service on a user.
 
-** FIXME: document that phoneNumber can be null, which means explicitly set the user's Charge Number TN to be empty in BWKS, regardless of its current value.
-
-** FIXME: remove service-provider and group from URI; they are not necessary when operating on a user.
-PUT /broadworks/service-providers/{+serviceProviderId}/groups/{+groupId}/users/{+userId}/services/Charge%20Number
+**FIXME: document that phoneNumber can be null, which means explicitly set the user's Charge Number TN to be empty in BWKS, regardless of its current value.**
+PUT /network-elements/broadworks/{+ne_id}/users/{+userId}/services/Charge%20Number
 > Content-Type: application/json
 {
     "phoneNumber" : "+1-2005554321",
-    "useChargeNumberForEnhancedTranslations" : "false",
-    "sendChargeNumberToNetwork" : "true"
+    "useChargeNumberForEnhancedTranslations" : false,
+    "sendChargeNumberToNetwork" : true
 }
 < 204
+< Transaction-Id: 1380080943120
 
 
 Update settings for Third-Party Voice Mail Support (3PVM) service on a user.
-
-** FIXME: remove service-provider and group from URI; they are not necessary when operating on a user.
-PUT /broadworks/service-providers/{+serviceProviderId}/groups/{+groupId}/users/{+userId}/services/Third-Party%20Voice%20Mail%20Support
+PUT /network-elements/broadworks/{+ne_id}/users/{+userId}/services/Third-Party%20Voice%20Mail%20Support
 > Content-Type: application/json
 {
     "isActive" : true,
@@ -2475,42 +3195,117 @@ PUT /broadworks/service-providers/{+serviceProviderId}/groups/{+groupId}/users/{
     "outOfPrimaryZoneRedirectToVoiceMail" : false
 }
 < 204
+< Transaction-Id: 1380080943120
 
 
 Update settings for Call Forwarding No Answer (CFNA) service on a user.
-
-** FIXME: remove service-provider and group from URI; they are not necessary when operating on a user.
-PUT /broadworks/service-providers/{+serviceProviderId}/groups/{+groupId}/users/{+userId}/services/Call%20Forwarding%20No%20Answer
+PUT /network-elements/broadworks/{+ne_id}/users/{+userId}/services/Call%20Forwarding%20No%20Answer
 > Content-Type: application/json
 {
     "isActive" : true,
-    "forwardPhoneNumber" : "5553120301,
+    "forwardToPhoneNumber" : "5553120301,
     "numberOfRings" : 4
 }
 < 204
+< Transaction-Id: 1380080943120
 
 
 Update settings for Call Forwarding Not Reachable (CFNR) service on a user.
-
-** FIXME: remove service-provider and group from URI; they are not necessary when operating on a user.
-PUT /broadworks/service-providers/{+serviceProviderId}/groups/{+groupId}/users/{+userId}/services/Call%20Forwarding%20Not%20Reachable
+PUT /network-elements/broadworks/{+ne_id}/users/{+userId}/services/Call%20Forwarding%20Not%20Reachable
 > Content-Type: application/json
 {
     "isActive" : true,
-    "forwardPhoneNumber" : "5553120301,
+    "forwardToPhoneNumber" : "5553120301,
 }
 < 204
+< Transaction-Id: 1380080943120
+
+
+Retrieve a BroadWorks User's Call Processing Policies settings.
+Refer to BroadWorks documentation for specifics of the properties under extensions.broadworks.
+
+In addition to the standard error codes, this will return 404 Not Found if the user does not exist in BroadWorks.
+
+**NOT IMPLEMENTED**
+GET /network-elements/broadworks/{+ne_id}/users/{+userId}/call-processing-policy
+< 200
+< Transaction-Id: 1380080943120
+< Content-Type: application/hal+json
+{
+    "_links, curies" : "tbd",
+    "userId" : "4155551212@example.com",
+    "ne_id" : "1",
+    "tbd" : "request not implemented; documentation not completed"
+}
+
+
+Update a BroadWorks User's Call Processing Policies settings.
+Refer to BroadWorks documentation for specifics of the properties under extensions.broadworks.
+
+In addition to the standard error codes, this will return 404 Not Found if the user does not exist in BroadWorks.
+
+Notes:
+
+* The properties of the request inputs correspond to elements of the same name in BroadWorks OCI UserCallProcessingModifyPolicyRequestX (as of R17SP4),
+with the exception of the convenience grouping objects (callingLineId, media, callLimits, incomingCallerId), which have no BroadWorks equivalent.
+* The mapping is direct – no transformations are performed on the values.
+* If a property is omitted in the request, the corresponding element will be omitted from the OCI request.
+* If a property is present in the request that is not part of the json-schema for this request, it will be ignored.
+
+**TODO: Add json-schema with the URI template variables (all are required) and the list of body properties (all are optional) and data type for each**
+PUT /network-elements/broadworks/{+ne_id}/users/{+userId}/call-processing-policy
+> Content-Type: application/json
+{
+    "callingLineId": {
+        "useUserCLIDSetting": false,
+        "clidPolicy": "Use DN",
+        "emergencyClidPolicy": "Use DN",
+        "allowAlternateNumbersForRedirectingIdentity": true,
+        "useGroupName": false,
+        "allowConfigurableCLIDForRedirectingIdentity": true,
+        "blockCallingNameForExternalCalls": false
+    },
+    "media": {
+        "useUserMediaSetting": false,
+        "mediaPolicySelection": "No Restrictions",
+        "supportedMediaSetName": "Example"
+    },
+    "callLimits": {
+        "useUserCallLimitsSetting": false,
+        "useMaxSimultaneousCalls": false,
+        "maxSimultaneousCalls": 10,
+        "useMaxSimultaneousVideoCalls": false,
+        "maxSimultaneousVideoCalls": 5,
+        "useMaxCallTimeForAnsweredCalls": false,
+        "maxCallTimeForAnsweredCallsMinutes": 600,
+        "useMaxCallTimeForUnansweredCalls": false,
+        "maxCallTimeForUnansweredCallsMinutes": 2,
+        "useMaxConcurrentRedirectedCalls": false,
+        "maxConcurrentRedirectedCalls": 3,
+        "useMaxFindMeFollowMeDepth": false,
+        "maxFindMeFollowMeDepth": 3,
+        "maxRedirectionDepth": 10,
+        "useMaxConcurrentFindMeFollowMeInvocations": false,
+        "maxConcurrentFindMeFollowMeInvocations": 3
+    },
+    "incomingCallerId": {
+        "useUserDCLIDSetting": false,
+        "enableDialableCallerID": false
+    }
+}
+< 204
+< Transaction-Id: 1380080943120
 
 
 --
-BroadWorks Utility - OCI
+BroadWorks Utility: Open Client Interface - Provisioning (OCI-P)
 
 Network Element: BroadWorks (initially supports only the AS or XSP)
 
 Provides communication with the OCI API on BroadWorks network elements, including authentication, session management, and basic error handling.
 --
 
-Process an OCI request. **Note, this request is intended to be consumed by the BroadWorks Entity Service only, and at this
+Process an OCI request. **Note, this request is intended to be consumed by the BroadWorks Utility Service only, and at this
 time no other service should be consuming this request.**
 
 The internal OCI request factory will convert  OCI XML response data directly into JSON data in the 200 OK response, with the exception of OCI XML elements of the "OCITable"
@@ -2523,6 +3318,7 @@ POST /network-elements/broadworks/{+ne_id}/processOci
     "serviceProviderId" : "exampleCom"
 }
 < 200
+< Transaction-Id: 1380080943120
 < Content-Type: application/json
 {
     "defaultLanguage": "English",
@@ -2541,43 +3337,83 @@ POST /network-elements/broadworks/{+ne_id}/processOci
 }
 +++++
 < 204
+< Transaction-Id: 1380080943120
 +++++
 < 401
+< Transaction-Id: 1380080943120
 < Content-Type: application/json
 {
     "errorCode" : "EXTERNAL_API_AUTHENTICATION_ERROR",
-    "externalErrorCode" : 4962,
+    "externalErrorCode" : "4962",
     "externalErrorSummary" : "[Error 4962] Invalid password",
     "externalErrorDetail" : "[Error 4962] Invalid password"
 }
 +++++
 < 403
+< Transaction-Id: 1380080943120
 < Content-Type: application/json
 {
     "errorCode" : "EXTERNAL_API_FORBIDDEN",
-    "externalErrorCode" : 4003,
+    "externalErrorCode" : "4003",
     "externalErrorSummary" : "[Error 4003] Unauthorized request: UserGetListInGroupRequest",
     "externalErrorDetail" : "[Error 4003] Unauthorized request: UserGetListInGroupRequest"
 }
 +++++
 < 424
+< Transaction-Id: 1380080943120
 < Content-Type: application/json
 {
     "errorCode" : "EXTERNAL_API_ERROR",
-    "externalErrorCode" : 4410,
+    "externalErrorCode" : "4410",
     "externalErrorSummary" : "[Error 4410] Service is not assigned to this subscriber: Call Forwarding Not Reachable",
     "externalErrorDetail" : "[Error 4410] Service is not assigned to this subscriber: Call Forwarding Not Reachable"
 }
 +++++
 < 500
+< Transaction-Id: 1380080943120
 +++++
 < 502
+< Transaction-Id: 1380080943120
 +++++
 < 504
+< Transaction-Id: 1380080943120
 
 
 --
 CHANGELOG
+
+#1.6
+Changes for *ctional Description: Update to BroadWorks Entity and Utility Service Functional Division*:
+
+* Move several requests from /loki-service/broadworks context to /loki-services/network-elements/broadworks/{+ne_id}, and add ne_id property in their response bodies.
+* Added new Utility Service GET requests for BroadWorks groups and their sub-resources (password rules, extension length).
+
+Changes for *Functional Description: BroadWorks Utility Service support to Modify User Call Processing Policies*:
+
+* Add GET (not implemented) and PUT for /users/{+userId}/call-processing-policy in the BroadWorks Utility Service (including json-schema for PUT request).
+
+General:
+
+* Add missing Transaction-Id header in responses.
+* Change checkmark/x to yes/no for clarity.
+* Corrected ne_id in number-translations GET query example response.
+* Documented 404 response for GET queries on Sonus resources.
+* Documented HEAD requests on Sonus resources.
+* Update BroadWorks examples to include missing TPVM properties.
+* Document POST /loki-services/broadworks/assignUserServices.
+* Document GET /network-elements/broadworks/{+ne_id}/time-zones.
+* Documented optional properties in response from BroadWorks groups GET query.
+* Correct type in forwardToPhoneNumber property of PUT for BroadWorks CFNA and CFNR user services.
+* Add clarification about confusing properties in GET requests for service authorizations.
+* Removed invalid tnRoutine property, and added missing password property, in POST /loki-services/network-elements/broadworks/{+ne_id}/service-providers/{+serviceProviderId}/groups/{+groupId}/users.
+* Corrected data type for various properties in:
+  POST /loki-services/network-elements/sonus/{+ne_id}/routes
+  GET /loki-services/network-elements/sonus-psx/{+ne_id}/routes{?...}
+  GET /loki-services/network-elements/broadworks/{+ne_id}/service-providers/{+serviceProviderId}/services
+  PUT /loki-services/network-elements/broadworks/{+ne_id}/service-providers/{+serviceProviderId}/services
+  GET /loki-services/network-elements/broadworks/{+ne_id}/service-providers/{+serviceProviderId}/groups/{+groupId}
+  GET /loki-services/network-elements/broadworks/{+ne_id}/service-providers/{+serviceProviderId}/groups/{+groupId}/services
+  PUT /loki-services/network-elements/broadworks/{+ne_id}/service-providers/{+serviceProviderId}/groups/{+groupId}/services
 
 #1.5
 Changes for *Functional Description: Alternate API Navigation*:
@@ -2611,3 +3447,123 @@ General:
 * Add timeZone and language in various request/response bodies related to the BroadWorks user add process.
 
 --
+
+
+-- JSON Schema Validations --
+
+PUT /loki-services/network-elements/broadworks/{+ne_id}/users/{+userId}/call-processing-policy
+{
+    "request" :
+        {
+            "type": "object",
+            "title": "User Call Processing Policy Modify request body schema",
+            "properties": {
+                "callingLineId": {
+                    "type": "object",
+                    "properties": {
+                        "useUserCLIDSetting": {
+                            "type": "boolean"
+                        },
+                        "clidPolicy": {
+                            "type": "string"
+                        },
+                        "emergencyClidPolicy": {
+                            "type": "string"
+                        },
+                        "allowAlternateNumbersForRedirectingIdentity": {
+                            "type": "boolean"
+                        },
+                        "useGroupName": {
+                            "type": "boolean"
+                        },
+                        "allowConfigurableCLIDForRedirectingIdentity": {
+                            "type": "boolean"
+                        },
+                        "blockCallingNameForExternalCalls": {
+                            "type": "boolean"
+                        }
+                    }
+                },
+                "media": {
+                    "type": "object",
+                    "properties": {
+                        "useUserMediaSetting": {
+                            "type": "boolean"
+                        },
+                        "mediaPolicySelection": {
+                            "type": "string"
+                        },
+                        "supportedMediaSetName": {
+                            "type": "string"
+                        }
+                    }
+                },
+                "callLimits": {
+                    "type": "object",
+                    "properties": {
+                        "useUserCallLimitsSetting": {
+                            "type": "boolean"
+                        },
+                        "useMaxSimultaneousCalls": {
+                            "type": "boolean"
+                        },
+                        "maxSimultaneousCalls": {
+                            "type": "integer"
+                        },
+                        "useMaxSimultaneousVideoCalls": {
+                            "type": "boolean"
+                        },
+                        "maxSimultaneousVideoCalls": {
+                            "type": "integer"
+                        },
+                        "useMaxCallTimeForAnsweredCalls": {
+                            "type": "boolean"
+                        },
+                        "maxCallTimeForAnsweredCallsMinutes": {
+                            "type": "integer"
+                        },
+                        "useMaxCallTimeForUnansweredCalls": {
+                            "type": "boolean"
+                        },
+                        "maxCallTimeForUnansweredCallsMinutes": {
+                            "type": "integer"
+                        },
+                        "useMaxConcurrentRedirectedCalls": {
+                            "type": "boolean"
+                        },
+                        "maxConcurrentRedirectedCalls": {
+                            "type": "integer"
+                        },
+                        "useMaxFindMeFollowMeDepth": {
+                            "type": "boolean"
+                        },
+                        "maxFindMeFollowMeDepth": {
+                            "type": "integer"
+                        },
+                        "maxRedirectionDepth": {
+                            "type": "integer"
+                        },
+                        "useMaxConcurrentFindMeFollowMeInvocations": {
+                            "type": "boolean"
+                        },
+                        "maxConcurrentFindMeFollowMeInvocations": {
+                            "type": "integer"
+                        }
+                    }
+                },
+                "incomingCallerId": {
+                    "type": "object",
+                    "properties": {
+                        "useUserDCLIDSetting": {
+                            "type": "boolean"
+                        },
+                        "enableDialableCallerID": {
+                            "type": "boolean"
+                        }
+                    }
+                }
+            }
+        },
+    "response" :
+    { }
+}
