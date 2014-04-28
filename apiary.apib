@@ -16,7 +16,7 @@ See also:
 
 [INTERNAL] Documenting the internal APIs (service contracts) between services in the Loki3 architecture.
 
-**Note: all referencese to <code>loki3.apiary.io</code> are for example purposes only. In a deployed Loki Server
+**Note: all references to <code>loki3.apiary.io</code> are for example purposes only. In a deployed Loki Server
 these will be references to the Loki REST API host.**
 
 **TBD: add HAL notes. Note (at least initially) in the response bodies, the _links.self.href matches the URI submitted by the client, including any query parameters**
@@ -43,10 +43,10 @@ list all configured network elements (each BroadWorks, each Sonus, each SurgeMai
 * Returning them all means there are 2 ways to access a network-element, which is not ideal; "/network-elements/2" and "/network-elements/soft-switches/2" point to the same resource.
 * However if we omit the first option, then you have to know what type of element it is before you can retrieve it.
 * We can support both, but remember: report canonical URIs. If you have two different URIs for the same resource, ensure you put the canonical URL in the response.
-* As this is currently specified, there's no way to fetch the list of supported network element types. 
+* As this is currently specified, there's no way to fetch the list of supported network element types.
 GET /INVALID/network-elements
 < 200
-<  Content-Type: application/json
+< Content-Type: application/json
 { "network-elements": [
         { "url": "/network-elements/soft-switches/1", "id" : 1, "platform" : "Sonus PSX", "name": "Sonus East" },
         { "url": "/network-elements/application-servers/appservers/2", "id" : 2, "platform" : "BroadWorks AS", "name": "BroadWorks Cluster 1 AS2" },
@@ -85,10 +85,8 @@ references to 3rd-party documentation.
 
 Keys:
 
-* sourceDn
-
-Extension Keys (Sonus PSX):
-
+* nationalId
+* countryId
 * attributes
 * callProcessingElement1Id
 * callProcessingElement2Id
@@ -106,42 +104,40 @@ In the initial implementation, any Sonus errors will simply be passed back to th
 
 URI Template Variables:
 
-* {ne_id} - The ID of the target network element (i.e. the Sonus PSX instance), as defined in the system configuration.
-POST /network-elements/sonus-psx/{ne_id}/number-translations
+* {+ne_id} - The ID of the target network element (i.e. the Sonus PSX instance), as defined in the system configuration.
+POST /network-elements/sonus-psx/{+ne_id}/number-translations
 > Content-Type: application/json
 {
-    "sourceDn" : "+1-8665554321",
-    "translatedDn" : "+1-5553043000",
-    "extensions" : {
-        "sonusPsx" : {
-            "attributes" : 0,
-            "callProcessingElement1Id" : "978",
-            "callProcessingElement2Id" : null,
-            "callProcessingElement3Id" : null,
-            "callProcessingElement4Id" : null,
-            "callProcessingElementType" : 5,
-            "servicesProvisioned" : 0,
-            "phoneType" : 1,
-            "suspendedFlag" : 0,
-            "directTranslationFlag" : 0,
-            "translationLabelId" : null,
-            "translatedCarrierId" : null,
-            "translatedCalltype" : 0,
-            "translatedNpi" : 0,
-            "translatedNoa" : 13,
-            "useTranslationProfile" : 0,
-            "translationProfileId" : null
-        }
-    }
+    "nationalId" : "8665554321",
+    "countryId" : "1",
+    "translatedNationalId" : "5553043000",
+    "translatedCountryId" : "1",
+    "attributes" : 0,
+    "callProcessingElement1Id" : "978",
+    "callProcessingElement2Id" : null,
+    "callProcessingElement3Id" : null,
+    "callProcessingElement4Id" : null,
+    "callProcessingElementType" : 5,
+    "servicesProvisioned" : 0,
+    "phoneType" : 1,
+    "suspendedFlag" : 0,
+    "directTranslationFlag" : 0,
+    "translationLabelId" : null,
+    "translatedCarrierId" : null,
+    "translatedCalltype" : 0,
+    "translatedNpi" : 0,
+    "translatedNoa" : 13,
+    "useTranslationProfile" : 0,
+    "translationProfileId" : null
 }
 < 201
-< Location: http://loki3services.apiary.io/loki-services/network-elements/sonus-psx/1/number-translations/3%3A1%3A8665554321%3A0%3A978%3A%3A%3A%3A5
+< Location: http://loki3services.apiary.io/loki-services/network-elements/sonus-psx/1/number-translations/3-1-8665554321-0-978----5
 +++++
 < 500
 
 
 Check if a number translation exists.
-HEAD /network-elements/sonus-psx/{ne_id}/number-translations/{+id}
+HEAD /network-elements/sonus-psx/{+ne_id}/number-translations/{+id}
 < 204
 +++++
 < 404
@@ -163,61 +159,58 @@ will contain at most one match.
     <thead>
     <th>Parameter</th>
     <th>Required?</th>
-    <th>Type</th>
     <th>Mode</th>
     </thead>
     <tbody>
         <tr>
-            <td>sourceDn</td>
+            <td>nationalId</td>
             <td style="text-align: center; font-weight:bold">&#x2713;</td>
-            <td>core</td>
+            <td>Equal To</td>
+        </tr>
+        <tr>
+            <td>countryId</td>
+            <td style="text-align: center; font-weight:bold">&#x2713;</td>
             <td>Equal To</td>
         </tr>
         <tr>
             <td>attributes</td>
             <td style="text-align: center; font-weight:bold">&#x2713;</td>
-            <td>extension</td>
             <td>Equal To</td>
         </tr>
         <tr>
             <td>callProcessingElement1Id</td>
             <td style="text-align: center; font-weight:bold">&#x2713;</td>
-            <td>extension</td>
             <td>Equal To</td>
         </tr>
         <tr>
             <td>callProcessingElement2Id</td>
             <td style="text-align: center; font-weight:bold">&#x2713;</td>
-            <td>extension</td>
             <td>Equal To</td>
         </tr>
         <tr>
             <td>callProcessingElement3Id</td>
             <td style="text-align: center; font-weight:bold">&#x2713;</td>
-            <td>extension</td>
             <td>Equal To</td>
         </tr>
         <tr>
             <td>callProcessingElement4Id</td>
             <td style="text-align: center; font-weight:bold">&#x2713;</td>
-            <td>extension</td>
             <td>Equal To</td>
         </tr>
         <tr>
             <td>callProcessingElementType</td>
             <td style="text-align: center; font-weight:bold">&#x2713;</td>
-            <td>extension</td>
             <td>Equal To</td>
         </tr>
     </tbody>
 </table>
-GET /network-elements/sonus-psx/{ne_id}/number-translations{?sourceDn,attributes,callProcessingElement1Id,callProcessingElement2Id,callProcessingElement3Id,callProcessingElement4Id,callProcessingElementType}
+GET /network-elements/sonus-psx/{+ne_id}/number-translations{?nationalId,countryId,attributes,callProcessingElement1Id,callProcessingElement2Id,callProcessingElement3Id,callProcessingElement4Id,callProcessingElementType}
 < 200
 < Content-Type: application/hal+json
 {
     "_links" : {
         "self" : {
-            "href" : "http://loki3services.apiary.io/loki-services/network-elements/sonus-psx/1/number-translations?sourceDn=%2B1-8665554321&attributes=0&callProcessingElement1Id=978&callProcessingElement2Id=&callProcessingElement3Id=&callProcessingElement4Id=&callProcessingElementType=5"
+            "href" : "http://loki3services.apiary.io/loki-services/network-elements/sonus-psx/1/number-translations?nationalId=8665554321&countryId=1&attributes=0&callProcessingElement1Id=978&callProcessingElement2Id=&callProcessingElement3Id=&callProcessingElement4Id=&callProcessingElementType=5"
         }
     },
     "curies" : [
@@ -232,65 +225,61 @@ GET /network-elements/sonus-psx/{ne_id}/number-translations{?sourceDn,attributes
             {
                 "_links" : {
                     "self" : {
-                        "href" : "http://loki3services.apiary.io/loki-services/network-elements/sonus-psx/1/number-translations/3%3A1%3A8665554321%3A0%3A978%3A%3A%3A%3A5"
+                        "href" : "http://loki3services.apiary.io/loki-services/network-elements/sonus-psx/1/number-translations/3-1-8665554321-0-978----5"
                     }
                 },
-                "id" : "3%3A1%3A8665554321%3A0%3A978%3A%3A%3A%3A5",
-                "sourceDn" : "+1-8665554321",
-                "translatedDn" : "+1-5553043000",
-                "extensions" : {
-                    "sonusPsx" : {
-                        "attributes" : 0,
-                        "callProcessingElement1Id" : "978",
-                        "callProcessingElement2Id" : null,
-                        "callProcessingElement3Id" : null,
-                        "callProcessingElement4Id" : null,
-                        "callProcessingElementType" : 5,
-                        "servicesProvisioned" : 0,
-                        "phoneType" : 1,
-                        "suspendedFlag" : 0,
-                        "directTranslationFlag" : 0,
-                        "translationLabelId" : null,
-                        "translatedCarrierId" : null,
-                        "translatedCalltype" : 0,
-                        "translatedNpi" : 0,
-                        "translatedNoa" : 13,
-                        "useTranslationProfile" : 0,
-                        "translationProfileId" : null
-                    }
-                }
+                "id" : "3-1-8665554321-0-978----5",
+                "ne_id" : "3",
+                "nationalId" : "8665554321",
+                "countryId" : "1",
+                "translatedNationalId" : "5553043000",
+                "translatedCountryId" : "1",
+                "attributes" : 0,
+                "callProcessingElement1Id" : "978",
+                "callProcessingElement2Id" : null,
+                "callProcessingElement3Id" : null,
+                "callProcessingElement4Id" : null,
+                "callProcessingElementType" : 5,
+                "servicesProvisioned" : 0,
+                "phoneType" : 1,
+                "suspendedFlag" : 0,
+                "directTranslationFlag" : 0,
+                "translationLabelId" : null,
+                "translatedCarrierId" : null,
+                "translatedCalltype" : 0,
+                "translatedNpi" : 0,
+                "translatedNoa" : 13,
+                "useTranslationProfile" : 0,
+                "translationProfileId" : null
             }
         ]
     }
 }
 
 
-Update a number translation.
-PUT /network-elements/sonus-psx/{ne_id}/number-translations/{+id}
+Update a number translation. All fields are optional.
+PUT /network-elements/sonus-psx/{+ne_id}/number-translations/{+id}
 > Content-Type: application/json
 {
-    "translatedDn" : "+1-5553043000",
-    "extensions" : {
-        "sonusPsx" : {
-            "servicesProvisioned" : 0,
-            "phoneType" : 1,
-            "suspendedFlag" : 0,
-            "directTranslationFlag" : 0,
-            "translationLabelId" : null,
-            "translatedCarrierId" : null,
-            "translatedCalltype" : 0,
-            "translatedNpi" : 0,
-            "translatedNoa" : 13,
-            "useTranslationProfile" : 0,
-            "translationProfileId" : null
-        }
-    }
+    "translatedNationalId" : "5553043000",
+    "translatedCountryId" : "1",
+    "servicesProvisioned" : 0,
+    "phoneType" : 1,
+    "suspendedFlag" : 0,
+    "directTranslationFlag" : 0,
+    "translationLabelId" : null,
+    "translatedCarrierId" : null,
+    "translatedCalltype" : 0,
+    "translatedNpi" : 0,
+    "translatedNoa" : 13,
+    "useTranslationProfile" : 0,
+    "translationProfileId" : null
 }
 < 204
 
 
 Delete a number translation.
-DELETE /network-elements/sonus-psx/{ne_id}/number-translations/{+id}
+DELETE /network-elements/sonus-psx/{+ne_id}/number-translations/{+id}
 < 204
 
 
@@ -317,8 +306,8 @@ In the initial implementation, any Sonus errors will simply be passed back to th
 
 URI Template Variables:
 
-* {ne_id} - The ID of the target network element (i.e. the Sonus PSX instance), as defined in the system configuration.
-POST /network-elements/sonus-psx/{ne_id}/subscribers
+* {+ne_id} - The ID of the target network element (i.e. the Sonus PSX instance), as defined in the system configuration.
+POST /network-elements/sonus-psx/{+ne_id}/subscribers
 > Content-Type: application/json
 {
     "subscriberId" : "2005553001",
@@ -356,7 +345,7 @@ POST /network-elements/sonus-psx/{ne_id}/subscribers
     "memberStatus" : -1
 }
 < 201
-< Location: http://loki3services.apiary.io/loki-services/network-elements/sonus-psx/1/subscribers/1%3A2005553001%3A1%3A16
+< Location: http://loki3services.apiary.io/loki-services/network-elements/sonus-psx/1/subscribers/1-2005553001-1-16
 +++++
 < 200
 +++++
@@ -401,7 +390,7 @@ will contain at most one match.
         </tr>
     </tbody>
 </table>
-GET /network-elements/sonus-psx/{ne_id}/subscribers{?subscriberId,countryId,owningCarrierId}
+GET /network-elements/sonus-psx/{+ne_id}/subscribers{?subscriberId,countryId,owningCarrierId}
 < 200
 < Content-Type: application/hal+json
 {
@@ -422,10 +411,11 @@ GET /network-elements/sonus-psx/{ne_id}/subscribers{?subscriberId,countryId,owni
             {
                 "_links" : {
                     "self" : {
-                        "href" : "http://loki3services.apiary.io/loki-services/network-elements/sonus-psx/1/subscribers/1%3A2005553001%3A1%3A16"
+                        "href" : "http://loki3services.apiary.io/loki-services/network-elements/sonus-psx/1/subscribers/1-2005553001-1-16"
                     }
                 },
-                "id" : "1%3A2005553001%3A1%3A16",
+                "id" : "1-2005553001-1-16",
+                "ne_id" : "1",
                 "subscriberId" : "2005553001",
                 "countryId" : "1",
                 "owningCarrierId" : "16",
@@ -469,8 +459,46 @@ GET /network-elements/sonus-psx/{ne_id}/subscribers{?subscriberId,countryId,owni
 < 500
 
 
+Update a subscriber. All fields are optional.
+PUT /network-elements/sonus-psx/{+ne_id}/subscribers/{+id}
+> Content-Type: application/json
+{
+    "businessGroupId" : null,
+    "interLataCarrierId" : "5000",
+    "intraLataCarrierId" : "5000",
+    "intlCarrierId" : "5000",
+    "assignedCarrierId" : null,
+    "presentationFlag" : 0,
+    "prfdPacketServiceProfileId" : null,
+    "optionType" : 0,
+    "testSubscriber" : 0,
+    "billingPlanId" : "EXAMPLE_PLAN",
+    "localCarrierId" : "5000",
+    "authcodeScriptId" : "EXAMPLE_SCRIPT",
+    "elementAttributes" : 0,
+    "classOfServiceId" : "EXAMPLE_COS",
+    "pseudoCarrierId" : null,
+    "infoDigitId" : null,
+    "scpBusinessServiceGroup" : 0,
+    "authcodeGroupId" : null,
+    "pinDigits" : null,
+    "svcList1" : 0,
+    "svcList2" : 0,
+    "exceptionProfileId" : "EXAMPLE_PROFILE",
+    "isDestination" : 1,
+    "defaultCpc" : null,
+    "homeMobileNetwork" : 0,
+    "origEntityRoutingProfileId" : "EXAMPLE_RTGPROFILE",
+    "callingArea" : "555_EXAMPLE",
+    "businessUnitId" : null,
+    "deviceProfileId" : null,
+    "memberStatus" : -1
+}
+< 204
+
+
 Delete a subscriber.
-DELETE /network-elements/sonus-psx/{ne_id}/subscribers/{+id}
+DELETE /network-elements/sonus-psx/{+ne_id}/subscribers/{+id}
 < 204
 
 
@@ -495,8 +523,8 @@ In the initial implementation, any Sonus errors will simply be passed back to th
 
 URI Template Variables:
 
-* {ne_id} - The ID of the target network element (i.e. the Sonus PSX instance), as defined in the system configuration.
-POST /network-elements/sonus-psx/{ne_id}/destinations
+* {+ne_id} - The ID of the target network element (i.e. the Sonus PSX instance), as defined in the system configuration.
+POST /network-elements/sonus-psx/{+ne_id}/destinations
 > Content-Type: application/json
 {
     "nationalId" : "2005553001",
@@ -515,7 +543,7 @@ POST /network-elements/sonus-psx/{ne_id}/destinations
     "businessUnitId" : null
 }
 < 201
-< Location: http://loki3services.apiary.io/loki-services/network-elements/sonus-psx/1/destinations/1%3A2005553001%3A1
+< Location: http://loki3services.apiary.io/loki-services/network-elements/sonus-psx/1/destinations/1-2005553001-1
 +++++
 < 500
 
@@ -553,7 +581,7 @@ will contain at most one match.
         </tr>
     </tbody>
 </table>
-GET /network-elements/sonus-psx/{ne_id}/destinations{?nationalId,countryId}
+GET /network-elements/sonus-psx/{+ne_id}/destinations{?nationalId,countryId}
 < 200
 < Content-Type: application/hal+json
 {
@@ -574,10 +602,11 @@ GET /network-elements/sonus-psx/{ne_id}/destinations{?nationalId,countryId}
             {
                 "_links" : {
                     "self" : {
-                        "href" : "http://loki3services.apiary.io/loki-services/network-elements/sonus-psx/1/destinations/1%3A2005553001%3A1"
+                        "href" : "http://loki3services.apiary.io/loki-services/network-elements/sonus-psx/1/destinations/1-2005553001-1"
                     }
                 },
-                "id" : "1%3A2005553001%3A1",
+                "ne_id" : "1",
+                "id" : "1-2005553001-1",
                 "nationalId" : "2005553001",
                 "countryId" : "1",
                 "destSvcScriptId" : null,
@@ -602,8 +631,28 @@ GET /network-elements/sonus-psx/{ne_id}/destinations{?nationalId,countryId}
 < 500
 
 
+Update a destination. All fields are optional.
+PUT /network-elements/sonus-psx/{+ne_id}/destinations/{+id}
+> Content-Type: application/json
+{
+    "destSvcScriptId" : null,
+    "customScriptId" : null,
+    "elementAttributes" : 0,
+    "prfdPacketServiceProfileId" : null,
+    "routingLabelId" : "EXAMPLE_RTNG_LBL",
+    "isSubscriber" : 1,
+    "portedType" : 0,
+    "lnpTransitionFlag" : 0,
+    "homeGateway" : "EXAMPLE_GW",
+    "exceptionProfileId" : null,
+    "businessGroupId" : null,
+    "businessUnitId" : null
+}
+< 204
+
+
 Delete a destination.
-DELETE /network-elements/sonus-psx/{ne_id}/destinations/{+id}
+DELETE /network-elements/sonus-psx/{+ne_id}/destinations/{+id}
 < 204
 
 
@@ -642,8 +691,8 @@ In the initial implementation, any Sonus errors will simply be passed back to th
 
 URI Template Variables:
 
-* {ne_id} - The ID of the target network element (i.e. the Sonus PSX instance), as defined in the system configuration.
-POST /network-elements/sonus-psx/{ne_id}/routes
+* {+ne_id} - The ID of the target network element (i.e. the Sonus PSX instance), as defined in the system configuration.
+POST /network-elements/sonus-psx/{+ne_id}/routes
 > Content-Type: application/json
 {
 	"callProcessingElement1Id" : null,
@@ -665,7 +714,7 @@ POST /network-elements/sonus-psx/{ne_id}/routes
 	"routingLabelId" : "EXAMPLE_RTNG_LBL"
 }
 < 201
-< Location: http://loki3services.apiary.io/loki-services/network-elements/sonus-psx/1/routes/1%3A%3A%3A%3A%3A0%3A3%3A2005553001%3A1%3AEXAMPLE_PARTITION%3A0%3A0%3A0%3A2147483647%3AALL%3A%3A%3AEXAMPLE_RTNG_LBL
+< Location: http://loki3services.apiary.io/loki-services/network-elements/sonus-psx/1/routes/1-----0-3-2005553001-1-EXAMPLE_PARTITION-0-0-0-2147483647-ALL--
 +++++
 < 500
 
@@ -674,108 +723,39 @@ Query Routes
 
 Service: Sonus Utility Service (uses the Sonus Insight API)
 
-Query Routes. Responses will include (at a minimum) they fields comprising the unique key for the resource.
-Querying on an extension field for a network element that is not configured will generate an error.
+Query Routes. This request is used only to retrieve a single route resource given all elements of the key.
+Responses will include (at a minimum) they fields comprising the unique key for the resource.
+See also "Query RouteQueries" for a more flexible method of querying routes.
+In this request:
 
-In the initial release, the only supported mode is where all keys are fully specified in the search request. Thus, intially, the response
-will contain at most one match. Note, while some fields in a Sonus RouteKey are in fact optional in the "retrieve" method (userCallType,
-digitType, callParamFilterProfileId, domainName), for consistency the Loki Server API requires that all fields of the key be
-specified in the GET query.
+* All of the URI query parameters (listed below) must be included in the request (even if some have no value).
+* Each parameter is expected to be complete (the match is an "equals" match, with
+no support for wildcards or partial values).
+* A "null" value can be searched for by explicitly including the parameter with no value,
+e.g. "...&callProcessingElement1Id=".
+* If no match is found, the response will be 404 Not Found
+
+The URI query parameters are as follows:
+
+* destinationNationalId
+* destinationCountryId
+* callProcessingElement1Id
+* callProcessingElement2Id
+* callProcessingElement3Id
+* callProcessingElement4Id
+* callProcessingElementType
+* routingType
+* partitionId
+* calltype
+* transmissionMedium
+* userCallType
+* digitType
+* timeRangeProfileId
+* callParamFilterProfileId
+* domainName
 
 [future: pagination of results via offset and max; field parameter to specify included/excluded fields]
-
-##URI Query Parameters
-
-<table border=1>
-    <thead>
-    <th>Parameter</th>
-    <th>Required?</th>
-    <th>Mode</th>
-    </thead>
-    <tbody>
-        <tr>
-			<td>callProcessingElement1Id
-            <td style="text-align: center; font-weight:bold">&#x2713;</td>
-            <td>Equal To</td>
-        </tr>
-        <tr>
-			<td>callProcessingElement2Id
-            <td style="text-align: center; font-weight:bold">&#x2713;</td>
-            <td>Equal To</td>
-        </tr>
-        <tr>
-			<td>callProcessingElement3Id
-            <td style="text-align: center; font-weight:bold">&#x2713;</td>
-            <td>Equal To</td>
-        </tr>
-        <tr>
-			<td>callProcessingElement4Id
-            <td style="text-align: center; font-weight:bold">&#x2713;</td>
-            <td>Equal To</td>
-        </tr>
-        <tr>
-			<td>callProcessingElementType
-            <td style="text-align: center; font-weight:bold">&#x2713;</td>
-            <td>Equal To</td>
-        </tr>
-        <tr>
-			<td>routingType
-            <td style="text-align: center; font-weight:bold">&#x2713;</td>
-            <td>Equal To</td>
-        </tr>
-        <tr>
-			<td>destinationNationalId
-            <td style="text-align: center; font-weight:bold">&#x2713;</td>
-            <td>Equal To</td>
-        </tr>
-        <tr>
-			<td>destinationCountryId
-            <td style="text-align: center; font-weight:bold">&#x2713;</td>
-            <td>Equal To</td>
-        </tr>
-        <tr>
-			<td>partitionId
-            <td style="text-align: center; font-weight:bold">&#x2713;</td>
-            <td>Equal To</td>
-        </tr>
-        <tr>
-			<td>calltype
-            <td style="text-align: center; font-weight:bold">&#x2713;</td>
-            <td>Equal To</td>
-        </tr>
-        <tr>
-			<td>transmissionMedium
-            <td style="text-align: center; font-weight:bold">&#x2713;</td>
-            <td>Equal To</td>
-        </tr>
-        <tr>
-			<td>userCallType
-            <td style="text-align: center; font-weight:bold">&#x2713;</td>
-            <td>Equal To</td>
-        </tr>
-        <tr>
-			<td>digitType
-            <td style="text-align: center; font-weight:bold">&#x2713;</td>
-            <td>Equal To</td>
-        </tr>
-        <tr>
-			<td>timeRangeProfileId
-            <td style="text-align: center; font-weight:bold">&#x2713;</td>
-            <td>Equal To</td>
-        </tr>
-        <tr>
-			<td>callParamFilterProfileId
-            <td style="text-align: center; font-weight:bold">&#x2713;</td>
-            <td>Equal To</td>
-        </tr>
-        <tr>
-			<td>domainName
-            <td style="text-align: center; font-weight:bold">&#x2713;</td>
-            <td>Equal To</td>
-        </tr>
-    </tbody>
-</table>
-GET /network-elements/sonus-psx/{ne_id}/routes{?callProcessingElement1Id,callProcessingElement2Id,...}
+GET /network-elements/sonus-psx/{+ne_id}/routes{?destinationNationalId,destinationCountryId,callProcessingElement1Id,callProcessingElement2Id,callProcessingElement3Id,callProcessingElement4Id,callProcessingElementType,routingType,partitionId,calltype,transmissionMedium,userCallType,digitType,timeRangeProfileId,callParamFilterProfileId,domainName}
 < 200
 < Content-Type: application/hal+json
 {
@@ -796,10 +776,11 @@ GET /network-elements/sonus-psx/{ne_id}/routes{?callProcessingElement1Id,callPro
             {
                 "_links" : {
                     "self" : {
-                        "href" : "http://loki3services.apiary.io/loki-services/network-elements/sonus-psx/1/routes/1%3A%3A%3A%3A%3A0%3A3%3A2005553001%3A1%3AEXAMPLE_PARTITION%3A0%3A0%3A0%3A2147483647%3AALL%3A%3A%3AEXAMPLE_RTNG_LBL"
+                        "href" : "http://loki3services.apiary.io/loki-services/network-elements/sonus-psx/1/routes/1-----0-3-2005553001-1-EXAMPLE_PARTITION-0-0-0-2147483647-ALL--"
                     }
                 },
-                "id" : "1%3A%3A%3A%3A%3A0%3A3%3A2005553001%3A1%3AEXAMPLE_PARTITION%3A0%3A0%3A0%3A2147483647%3AALL%3A%3A%3AEXAMPLE_RTNG_LBL",
+                "id" : "1-----0-3-2005553001-1-EXAMPLE_PARTITION-0-0-0-2147483647-ALL--",
+                "ne_id" : "1",
             	"callProcessingElement1Id" : null,
 	            "callProcessingElement2Id" : null,
 	            "callProcessingElement3Id" : null,
@@ -827,9 +808,143 @@ GET /network-elements/sonus-psx/{ne_id}/routes{?callProcessingElement1Id,callPro
 < 500
 
 
-Delete a route.
-DELETE /network-elements/sonus-psx/{ne_id}/routes/{+id}
+Update a route. All fields are optional.
+PUT /network-elements/sonus-psx/{+ne_id}/routes/{+id}
+> Content-Type: application/json
+{
+    "routingLabelId" : "EXAMPLE_RTNG_LBL"
+}
 < 204
+
+
+Delete a route.
+DELETE /network-elements/sonus-psx/{+ne_id}/routes/{+id}
+< 204
+
+
+--
+Sonus PSX Route-Queries
+##Collection
+
+Network Element: Sonus PSX
+
+Keys:
+
+* (none)
+
+This is a meta-entity on Sonus, which provides enhanced search capabilities for Route entities.
+--
+
+Query RouteQueries
+
+Service: Sonus Utility Service (uses the Sonus Insight API)
+
+Provides an alternative way to query Sonus Route entites, via the Sonus RouteQuery meta-entity. See also "Query Routes".
+
+This request is used all matching routes for various search criteria. Responses will include any mathing routes. In this request:
+
+* On or more of the URI query parameters (listed below) must be included, with a value.
+* Each parameter is expected to be complete (the match is an "equals" match, with
+no support for wildcards or partial values).
+* A "null" value can be searched for by explicitly including the parameter with no value,
+e.g. "...&callProcessingElement1Id=".
+* If no match is found, the response will be 404 Not Found
+* When one or more matches or found, they will be included in the embedded array _embedded."ls:routes"[].
+
+The URI query parameters are as follows:
+
+* destinationNationalId
+* destinationCountryId
+* partitionId
+* callProcessingElement1Id
+* callProcessingElement2Id
+* callProcessingElement3Id
+* callProcessingElement4Id
+* routingLabelId
+* callParamFilterProfileId
+* domainName
+
+**NOTE: As of 1.5, there is a defect in _embedded, making it inconsistent with the documentation below:
+it uses ls:route-queries and embeds the resources as route-queries, instead of as routes.**
+
+[future: pagination of results via offset and max; field parameter to specify included/excluded fields]
+GET /network-elements/sonus-psx/{+ne_id}/route-queries{?destinationNationalId,destinationCountryId,partitionId,callProcessingElement1Id,callProcessingElement2Id,callProcessingElement3Id,callProcessingElement4Id,routingLabelId,callParamFilterProfileId,domainName}
+< 200
+< Content-Type: application/hal+json
+{
+    "_links": {
+        "self": {
+            "href": "http://loki3services.apiary.io/loki-services/network-elements/sonus-psx/44/route-queries?routingLabelId=EXAMPLE_LBL"
+        }
+    },
+    "curies": [
+        {
+            "name": "ls",
+            "href": "http://localhost:8340/loki/rels/{rel}",
+            "templated": true
+        }
+    ],
+    "_embedded": {
+        "ls:routes": [
+            {
+                "_links": {
+                    "self": {
+                        "href": "http://loki3services.apiary.io/loki-services/network-elements/sonus-psx/44/routes/44-----0-3-4152141208-1-EXAMPLE_PARTITION-50176-8191-ALL--"
+                    }
+                },
+                "id": "44-----0-3-4152141208-1-EXAMPLE_PARTITION-50176-8191-ALL--",
+                "ne_id" : "44",
+                "callProcessingElement1Id": null,
+                "callProcessingElement2Id": null,
+                "callProcessingElement3Id": null,
+                "callProcessingElement4Id": null,
+                "callProcessingElementType": "0",
+                "routingType": "3",
+                "destinationNationalId": "4152141208",
+                "destinationCountryId": "1",
+                "partitionId": "EXAMPLE_PARTITION",
+                "calltype": "50176",
+                "routingLabelId": "EXAMPLE_LBL",
+                "transmissionMedium": "8191",
+                "userCallType": "0",
+                "digitType": "2147483647",
+                "timeRangeProfileId": "ALL",
+                "callParamFilterProfileId": null,
+                "domainName": null
+            },
+            {
+                "_links": {
+                    "self": {
+                        "href": "http://loki3services.apiary.io/loki-services/network-elements/sonus-psx/44/routes/44-----0-3-4165551212-1-EXAMPLE_PARTITION-50176-511-ALL--"
+                    }
+                },
+                "id": "44-----0-3-4165551212-1-EXAMPLE_PARTITION-50176-511-ALL--",
+                "ne_id" : "44",
+                "callProcessingElement1Id": null,
+                "callProcessingElement2Id": null,
+                "callProcessingElement3Id": null,
+                "callProcessingElement4Id": null,
+                "callProcessingElementType": "0",
+                "routingType": "3",
+                "destinationNationalId": "4165551212",
+                "destinationCountryId": "1",
+                "partitionId": "EXAMPLE_PARTITION",
+                "calltype": "50176",
+                "routingLabelId": "EXAMPLE_LBL",
+                "transmissionMedium": "511",
+                "userCallType": "0",
+                "digitType": "2147483647",
+                "timeRangeProfileId": "ALL",
+                "callParamFilterProfileId": null,
+                "domainName": null
+            }
+        ]
+    }
+}
++++++
+< 404
++++++
+< 500
 
 
 --
@@ -904,6 +1019,10 @@ POST /process-engine/process
             "isActive" : true,
             "forwardToPhoneNumber" : "+1-2005553101",
             "numberOfRings" : 4
+        },
+        "Call Forwarding Not Reachable" : {
+            "isActive" : true,
+            "forwardToPhoneNumber" : "+1-2005553101"
         }
     }
 }
@@ -978,6 +1097,10 @@ POST /process-engine/process
                         "isActive": true,
                         "forwardToPhoneNumber": "+1-2005553101",
                         "numberOfRings": 4
+                    },
+                    "Call Forwarding Not Reachable" : {
+                        "isActive" : true,
+                        "forwardToPhoneNumber" : "+1-2005553101"
                     }
                 }
             }
@@ -1082,6 +1205,10 @@ POST /broadworks/phone-numbers
             "isActive": true,
             "forwardToPhoneNumber": "+1-2005553101",
             "numberOfRings": 4
+        },
+        "Call Forwarding Not Reachable" : {
+            "isActive" : true,
+            "forwardToPhoneNumber" : "+1-2005553101"
         }
     }
 }
@@ -1212,6 +1339,10 @@ POST /broadworks/users
             "isActive": true,
             "forwardToPhoneNumber": "+1-2005553101",
             "numberOfRings": 4
+        },
+        "Call Forwarding Not Reachable" : {
+            "isActive" : true,
+            "forwardToPhoneNumber" : "+1-2005553101"
         }
     }
 }
@@ -1248,6 +1379,8 @@ POST /broadworks/users
                 "lastName" : "Smith",
                 "callingLineIdLastName" : "Smith",
                 "callingLineIdFirstName" : "John",
+                "timeZone": "America/New_York",
+                "language" : "English",
                 "sharedDeviceName": "iad_exampleCom001",
                 "trunkGroupName" : "exampleTrunk"
             }
@@ -1342,6 +1475,10 @@ POST /broadworks/configureUserServices
             "isActive": true,
             "forwardToPhoneNumber": "+1-2005553101",
             "numberOfRings": 4
+        },
+        "Call Forwarding Not Reachable" : {
+            "isActive" : true,
+            "forwardToPhoneNumber" : "+1-2005553101"
         }
     },
         "curies" : [
@@ -1368,6 +1505,8 @@ POST /broadworks/configureUserServices
                 "lastName" : "Smith",
                 "callingLineIdLastName" : "Smith",
                 "callingLineIdFirstName" : "John",
+                "timeZone": "America/New_York",
+                "language" : "English",
             }
         ],
         "etc" : "various embedded resources may be present here (phone-number, device, etc)"
@@ -1405,6 +1544,8 @@ POST /broadworks/configureUserServices
                 "lastName" : "Smith",
                 "callingLineIdLastName" : "Smith",
                 "callingLineIdFirstName" : "John",
+                "timeZone": "America/New_York",
+                "language" : "English",
                 "services" : {
                     "Authentication": {
                         "username": "2005553001",
@@ -1428,6 +1569,10 @@ POST /broadworks/configureUserServices
                         "isActive": true,
                         "forwardToPhoneNumber": "+1-2005553101",
                         "numberOfRings": 4
+                    },
+                    "Call Forwarding Not Reachable" : {
+                        "isActive" : true,
+                        "forwardToPhoneNumber" : "+1-2005553101"
                     }
                 }
             }
@@ -1462,13 +1607,19 @@ GET /broadworks/domains
             "href" : "http://loki3services.apiary.io/loki-services/broadworks/domains"
         }
     },
+    "curies" : [
+        {
+            "name" : "ls",
+            "href" : "http://loki3services.apiary.io/loki-services/rels/{rel}",
+            "templated" : true
+        }
+    ],
     "systemDefaultDomain" : "example.com",
     "domains" : [
         "another.example.com",
         "last.example.com"
     ]
 }
-
 
 Retrieve the Systems's list of defined languages, including the default language.
 GET /broadworks/languages
@@ -1480,6 +1631,13 @@ GET /broadworks/languages
             "href" : "http://loki3services.apiary.io/loki-services/broadworks/languages"
         }
     },
+    "curies" : [
+        {
+            "name" : "ls",
+            "href" : "http://loki3services.apiary.io/loki-services/rels/{rel}",
+            "templated" : true
+        }
+    ],
     "defaultLanguage": "English",
     "languageTable": [
         {
@@ -1494,6 +1652,7 @@ GET /broadworks/languages
         }
     ]
 }
+
 
 
 --
@@ -1512,15 +1671,23 @@ resources/methods below.
 Retrieve the Service Provider's assigned domains, including it's default domain.
 
 Note the "domains" property, if present, will always be an array (even if it has only one element)  .
-GET /broadworks/service-providers/{sericeProviderId}/domains
+GET /broadworks/service-providers/{+serviceProviderId}/domains
 < 200
 < Content-Type: application/hal+json
 {
     "_links" : {
         "self" : {
-            "href" : "http://loki3services.apiary.io/loki-services/broadworks/service-providers/exampleCom/domains"
+            "href" : "http://loki3services.apiary.io/loki-services/broadworks/service-providers/Example%20Com/domains"
         }
     },
+    "curies" : [
+        {
+            "name" : "ls",
+            "href" : "http://loki3services.apiary.io/loki-services/rels/{rel}",
+            "templated" : true
+        }
+    ],
+    "serviceProviderId" : "Example Com",
     "serviceProviderDefaultDomain" : "example.com",
     "domains" : [
         "another.example.com",
@@ -1545,7 +1712,7 @@ resources/methods below.
 Assign a single phone number (TN) to an Enterprise or Service Provider.
 
 Note that the 424 example is just one example of a possible BroadWorks error.
-POST /broadworks/service-providers/{sericeProviderId}/phone-numbers
+POST /broadworks/service-providers/{+serviceProviderId}/phone-numbers
 > Content-Type: application/json
 {
     "phoneNumber" : "+1-2005553001"
@@ -1564,7 +1731,7 @@ POST /broadworks/service-providers/{sericeProviderId}/phone-numbers
 
 
 Check existence of an individual phone number in an Enterprise or Service Provider.
-HEAD /broadworks/service-providers/{serviceProviderId}/phone-numbers/{phoneNumber}
+HEAD /broadworks/service-providers/{+serviceProviderId}/phone-numbers/{+phoneNumber}
 < 204
 +++++
 < 404
@@ -1576,14 +1743,14 @@ Retrieve an individual phone number from an Enterprise or Service Provider.
 broadworks-groups resource representations itself, and it would be wasteful to do an actual GET on /groups to
 fetch the group resource.**
 
-***NOT IMPLEMENTED as of 1.3***
-GET /broadworks/service-providers/{serviceProviderId}/phone-numbers/{phoneNumber}
+***NOT IMPLEMENTED as of 1.3; decide if _embedded service-provider stays or not***
+GET /broadworks/service-providers/{+serviceProviderId}/phone-numbers/{+phoneNumber}
 < 200
 < Content-Type: application/hal+json
 {
     "_links" : {
         "self" : {
-            "href" : "http://loki3services.apiary.io/loki-services/broadworks/service-providers/exampleCom/phone-numbers/%2B1-2005551212"
+            "href" : "http://loki3services.apiary.io/loki-services/broadworks/service-providers/Example%20Com/phone-numbers/%2B1-2005551212"
         }
     },
     "curies" : [
@@ -1594,17 +1761,18 @@ GET /broadworks/service-providers/{serviceProviderId}/phone-numbers/{phoneNumber
         }
     ],
     "_embedded" : {
-        "ls:broadworks-groups" : [
+        "ls:broadworks-service-providers" : [
             {
                 "_links" : {
                     "self" : {
                         "href" : "http://loki3services.apiary.io/loki-services/broadworks/serviceProviders/exampleCom/groups/exampleComNorth"
                     }
                 },
-                "groupId" : "exampleComNorth"
+                "serviceProviderId" : "Example Com"
             }
         ]
     },
+    "serviceProviderId" : "Example Com",
     "phoneNumber" : "+1-2005551212",
     "canDelete" : true
 }
@@ -1616,11 +1784,11 @@ Unassign a phone number from an Enterprise or a Service Provider.
 
 This request makes no attempt to check if the TN is actually assigned on the Enterprise/Service Provider,
 nor does it check to see if the TN allowed to be deleted. In future we may choose to use
-“GET /broadworks/service-providers/{serviceProviderId}/phone-numbers/{phoneNumber}” to first check for existence and
+“GET /broadworks/service-providers/{+serviceProviderId}/phone-numbers/{+phoneNumber}” to first check for existence and
 verify that the TN is allowed to be deleted; in which case we could return 404 if the TN isn't assigned
 on the ent/SP, or another 4xx if it's assigned but not allowed to be deleted (e.g. if it's assigned
 to a Group).
-DELETE /broadworks/service-providers/{serviceProviderId}/phone-numbers/{phoneNumber}
+DELETE /broadworks/service-providers/{+serviceProviderId}/phone-numbers/{+phoneNumber}
 < 204
 
 
@@ -1638,15 +1806,23 @@ resources/methods below.
 --
 
 Retrieve the Service Provider's service authorization detail.
-GET /broadworks/service-providers/{sericeProviderId}/services
+GET /broadworks/service-providers/{+serviceProviderId}/services
 < 200
 < Content-Type: application/hal+json
 {
     "_links" : {
         "self" : {
-            "href" : "http://loki3services.apiary.io/loki-services/broadworks/service-providers/exampleCom/services"
+            "href" : "http://loki3services.apiary.io/loki-services/broadworks/service-providers/Example%20Com/services"
         }
     },
+    "curies" : [
+        {
+            "name" : "ls",
+            "href" : "http://loki3services.apiary.io/loki-services/rels/{rel}",
+            "templated" : true
+        }
+    ],
+    "serviceProviderId" : "Example Com",
     "groupServicesAuthorizationTable": {
         "Account/Authorization Codes": {
             "Service Name": "Account/Authorization Codes",
@@ -1703,7 +1879,7 @@ Update the Service Provider's service authorizations. Each of groupServicesAutho
 userServicesAuthorizationTable may contain zero or more entries (or be omitted entirely). Invalid combinations
 (for example, Authorized=false with Limited=Unlimited) may result in an 500 Internal Server Error
 or a 400 Bad Request, depending on the response from the BroadWorks Utility Service.
-PUT /broadworks/service-providers/{sericeProviderId}/services
+PUT /broadworks/service-providers/{+serviceProviderId}/services
 > Content-Type: application/json
 {
     "groupServicesAuthorizationTable": {
@@ -1762,13 +1938,13 @@ parameter (which accepts a comma-separated list of values). These are:
 * extension-length
 * rules
 * ...?
-GET /broadworks/service-providers/{serviceProviderId}/groups/{groupId}{?view}
+GET /broadworks/service-providers/{+serviceProviderId}/groups/{+groupId}{?view}
 < 200
 < Content-Type: application/hal+json
 {
     "_links" : {
         "self" : {
-            "href" : "http://loki3services.apiary.io/loki-services/broadworks/service-providers/exampleCom/groups/exampleComNorth"
+            "href" : "http://loki3services.apiary.io/loki-services/broadworks/service-providers/Example%20Com/groups/Example%20Com%20-%20North"
         }
     },
     "curies" : [
@@ -1783,14 +1959,15 @@ GET /broadworks/service-providers/{serviceProviderId}/groups/{groupId}{?view}
             {
                 "_links" : {
                     "self" : {
-                        "href" : "http://loki3services.apiary.io/loki-services/broadworks/serviceProviders/exampleCom"
+                        "href" : "http://loki3services.apiary.io/loki-services/broadworks/serviceProviders/Example%20Com"
                     }
                 },
-                "serviceProviderId" : "exampleCom"
+                "serviceProviderId" : "Example Com"
             }
         ]
     },
-    "groupId" : "exampleComNorth",
+    "serviceProviderId" : "Example Com",
+    "groupId" : "Example Com - North",
     "defaultDomain": "r19.leonidsystems.com",
     "userLimit": "6",
     "userCount": "6",
@@ -1844,7 +2021,7 @@ GET /broadworks/service-providers/{serviceProviderId}/groups/{groupId}{?view}
 }
 
 Modify some or all editable properties of a BroadWorks Group.
-PUT /broadworks/service-providers/{serviceProviderId}/groups/{groupId}
+PUT /broadworks/service-providers/{+serviceProviderId}/groups/{+groupId}
 > Content-Type: application/json
 {
     "defaultDomain": "r19.leonidsystems.com",
@@ -1876,15 +2053,24 @@ PUT /broadworks/service-providers/{serviceProviderId}/groups/{groupId}
 Retrieve the Group's assigned domains, including it's default domain.
 
 Note the "domains" property, if present, will always be an array (even if it has only one element)  .
-GET /broadworks/service-providers/{sericeProviderId}/groups/{groupId}/domains
+GET /broadworks/service-providers/{+serviceProviderId}/groups/{+groupId}/domains
 < 200
 < Content-Type: application/hal+json
 {
     "_links" : {
         "self" : {
-            "href" : "http://loki3services.apiary.io/loki-services/broadworks/service-providers/exampleCom/groups/exampleComNorth/domains"
+            "href" : "http://loki3services.apiary.io/loki-services/broadworks/service-providers/Example%20Com/groups/Example%20Com%20-%20North/domains"
         }
     },
+    "curies" : [
+        {
+            "name" : "ls",
+            "href" : "http://loki3services.apiary.io/loki-services/rels/{rel}",
+            "templated" : true
+        }
+    ],
+    "serviceProviderId" : "Example Com",
+    "groupId" : "Example Com - North",
     "groupDefaultDomain" : "example.com",
     "domains" : [
         "another.example.com",
@@ -1908,7 +2094,7 @@ resources/methods below.
 --
 
 Assign a single phone number (TN) to a Group.
-POST broadworks/service-providers/{serviceProviderId}/groups/{groupId}/phone-numbers
+POST broadworks/service-providers/{+serviceProviderId}/groups/{+groupId}/phone-numbers
 > Content-Type: application/json
 {
     "phoneNumber" : "+1-2005553001"
@@ -1918,7 +2104,7 @@ POST broadworks/service-providers/{serviceProviderId}/groups/{groupId}/phone-num
 
 
 Check existence of an individual phone number in a Group.
-HEAD /broadworks/service-providers/{serviceProviderId}/groups/{groupId}/phone-numbers/{phoneNumber}
+HEAD /broadworks/service-providers/{+serviceProviderId}/groups/{+groupId}/phone-numbers/{+phoneNumber}
 < 204
 +++++
 < 404
@@ -1928,14 +2114,14 @@ Retrieve an individual phone number from a Group.
 
 The embedded "ls:broadworks-users" resource is included only when the phone number is assigned to a user.
 
-***NOT IMPLEMENTED as of 1.3***
-GET /broadworks/service-providers/{serviceProviderId}/groups/{group}/phone-numbers/{phoneNumber}
+***NOT IMPLEMENTED as of 1.3; note remember to add serviceProviderId in ther body***
+GET /broadworks/service-providers/{+serviceProviderId}/groups/{+groupId}/phone-numbers/{+phoneNumber}
 < 200
 < Content-Type: application/hal+json
 {
     "_links" : {
         "self" : {
-            "href" : "http://loki3services.apiary.io/loki-services/broadworks/service-providers/exampleCom/groups/exampleComNorth/phone-numbers/%2B1-2005551212"
+            "href" : "http://loki3services.apiary.io/loki-services/broadworks/serviceProviders/Example%20Com/groups/Example%20Com%20-%20North/phone-numbers/%2B1-2005551212"
         }
     },
     "curies" : [
@@ -1950,7 +2136,7 @@ GET /broadworks/service-providers/{serviceProviderId}/groups/{group}/phone-numbe
             {
                 "_links" : {
                     "self" : {
-                        "href" : "http://loki3services.apiary.io/loki-services/broadworks/serviceProviders/exampleCom/groups/exampleComNorth/users/2005553001%40example.com"
+                        "href" : "http://loki3services.apiary.io/loki-services/broadworks/users/2005553001%40example.com"
                     }
                 },
                 "userId" : "2005553001@example.com",
@@ -1962,6 +2148,8 @@ GET /broadworks/service-providers/{serviceProviderId}/groups/{group}/phone-numbe
             }
         ]
     },
+    "serviceProviderId" : "Example Com",
+    "groupId" : "Example Com - North",
     "phoneNumber" : "+1-2005551212",
     "department" : "Sales",
     "activated" : true
@@ -1974,11 +2162,11 @@ Unassign a phone number from a Group.
 
 This request makes no attempt to check if the TN is actually assigned on the Group,
 nor does it check to see if the TN allowed to be deleted. In future we may choose to use
-“GET /broadworks/service-providers/{serviceProviderId}/groups/{groupId}/phone-numbers/{phoneNumber}” to
+“GET /broadworks/service-providers/{+serviceProviderId}/groups/{+groupId}/phone-numbers/{+phoneNumber}” to
 first check for existence and verify that the TN is allowed to be deleted; in which case we could return
 404 if the TN isn't assigned on the Group, or another 4xx if it's assigned but not allowed to be deleted
 (e.g. if it's assigned to a (v)User).
-DELETE /broadworks/service-providers/{serviceProviderId}/groups/{group}/phone-numbers/{phoneNumber}
+DELETE /broadworks/service-providers/{+serviceProviderId}/groups/{+groupId}/phone-numbers/{+phoneNumber}
 < 204
 
 
@@ -1996,15 +2184,24 @@ resources/methods below.
 --
 
 Retrieve the Group's service authorization detail.
-GET /broadworks/service-providers/{sericeProviderId}/groups/{groupId}/services
+GET /broadworks/service-providers/{+serviceProviderId}/groups/{+groupId}/services
 < 200
 < Content-Type: application/hal+json
 {
     "_links" : {
         "self" : {
-            "href" : "http://loki3services.apiary.io/loki-services/broadworks/service-providers/exampleCom/groups/exampleComNorth/services"
+            "href" : "http://loki3services.apiary.io/loki-services/broadworks/serviceProviders/Example%20Com/groups/Example%20Com%20-%20North/services"
         }
     },
+    "curies" : [
+        {
+            "name" : "ls",
+            "href" : "http://loki3services.apiary.io/loki-services/rels/{rel}",
+            "templated" : true
+        }
+    ],
+    "serviceProviderId" : "Example Com",
+    "groupId" : "Example Com - North",
     "servicePacksAuthorizationTable" : {
         "Admin" : {
             "Service Pack Name" : "Admin",
@@ -2085,7 +2282,7 @@ userServicesAuthorizationTable may contain zero or more entries (or be omitted e
 or a 400 Bad Request, depending on the response from the BroadWorks Utility Service.
 
 **Note in future this will likely be used also to assign/unassign Group Services**
-PUT /broadworks/service-providers/{sericeProviderId}/groups/{groupId}/services
+PUT /broadworks/service-providers/{+serviceProviderId}/groups/{+groupId}/services
 > Content-Type: application/json
 {
     "servicePacksAuthorizationTable" : {
@@ -2148,7 +2345,7 @@ Create a BroadWorks User.
 
 Note that the request body includes both a device and a trunk group, for example purposes.
 Actual requests should include only one or the other (or neither, for users with no device).
-POST /broadworks/service-providers/{serviceProviderId}/groups/{groupId}/users
+POST /broadworks/service-providers/{+serviceProviderId}/groups/{+groupId}/users
 > Content-Type: application/json
 {
     "userId": "2005553001@example.com",
@@ -2171,11 +2368,13 @@ POST /broadworks/service-providers/{serviceProviderId}/groups/{groupId}/users
     "trunkGroupName" : "exampleTrunk"
 }
 < 201
-< Location: http://loki3services.apiary.io/loki-services/broadworks/serviceProviders/exampleCom/groups/exampleComNorth/users/2005553001%40example.com
+< Location: http://loki3services.apiary.io/loki-services/broadworks/serviceProviders/Example%20Com/groups/Example%20Com%20-%20North/users/2005553001%40example.com
 
 
 Delete a BroadWorks User
-DELETE /broadworks/service-providers/{serviceProviderId}/groups/{groupId}/users/{userId}
+
+** FIXME: remove service-provider and group from URI; they are not necessary when operating on a user.
+DELETE /broadworks/service-providers/{+serviceProviderId}/groups/{+groupId}/users/{+userId}
 < 204
 +++++
 < 404
@@ -2211,26 +2410,26 @@ Assigning a service which is already assigned, or un-assigning a service which i
 everything except those that are included here with Assigned=true). May make this change, or, add a ?parameter here to.
 As it stands, to update a user to ensure they have only 1 service assigned, you'd have to list **every** other BWKS service
 with "Assigned=false" here.
-PUT /broadworks/service-providers/{serviceProviderId}/groups/{groupId}/users/{userId}/services
+PUT /broadworks/users/{+userId}/services
 > Content-Type: application/json
 {
     "servicePacksAssignmentTable" : {
         "Admin" : {
-            "Assigned" : "true",
+            "Assigned" : true
         },
         "Standard" : {
-            "Authorized" : "false",
+            "Assigned" : false
         }
     },
     "userServicesAssignmentTable": {
         "Remote Office": {
-            "Assigned": "false"
+            "Assigned": false
         },
         "Authentication": {
-            "Assigned": "true",
+            "Assigned": true
         },
         "Call Waiting" : {
-            "Assigned": "true",
+            "Assigned": true
         }
     }
 }
@@ -2240,7 +2439,9 @@ PUT /broadworks/service-providers/{serviceProviderId}/groups/{groupId}/users/{us
 Update settings for Authentication service on a user.
 
 Note: when connecting to BroadWorks as a BroadWorks user (rather than as an admin), if "password" is included then "oldPassword" is also required.
-PUT /broadworks/service-providers/{serviceProviderId}/groups/{groupId}/users/{userId}/services/Authentication
+
+** FIXME: remove service-provider and group from URI; they are not necessary when operating on a user.
+PUT /broadworks/service-providers/{+serviceProviderId}/groups/{+groupId}/users/{+userId}/services/Authentication
 > Content-Type: application/json
 {
     "username" : "2005553001",
@@ -2251,7 +2452,11 @@ PUT /broadworks/service-providers/{serviceProviderId}/groups/{groupId}/users/{us
 
 
 Update settings for Charge Number service on a user.
-PUT /broadworks/service-providers/{serviceProviderId}/groups/{groupId}/users/{userId}/services/Charge%20Number
+
+** FIXME: document that phoneNumber can be null, which means explicitly set the user's Charge Number TN to be empty in BWKS, regardless of its current value.
+
+** FIXME: remove service-provider and group from URI; they are not necessary when operating on a user.
+PUT /broadworks/service-providers/{+serviceProviderId}/groups/{+groupId}/users/{+userId}/services/Charge%20Number
 > Content-Type: application/json
 {
     "phoneNumber" : "+1-2005554321",
@@ -2262,7 +2467,9 @@ PUT /broadworks/service-providers/{serviceProviderId}/groups/{groupId}/users/{us
 
 
 Update settings for Third-Party Voice Mail Support (3PVM) service on a user.
-PUT /broadworks/service-providers/{serviceProviderId}/groups/{groupId}/users/{userId}/services/Third-Party%20Voice%20Mail%20Support
+
+** FIXME: remove service-provider and group from URI; they are not necessary when operating on a user.
+PUT /broadworks/service-providers/{+serviceProviderId}/groups/{+groupId}/users/{+userId}/services/Third-Party%20Voice%20Mail%20Support
 > Content-Type: application/json
 {
     "isActive" : true,
@@ -2279,8 +2486,10 @@ PUT /broadworks/service-providers/{serviceProviderId}/groups/{groupId}/users/{us
 < 204
 
 
-Update settings for Third-Party Voice Mail Support (3PVM) service on a user.
-PUT /broadworks/service-providers/{serviceProviderId}/groups/{groupId}/users/{userId}/services/Call%20Forwarding%20No%20Answer
+Update settings for Call Forwarding No Answer (CFNA) service on a user.
+
+** FIXME: remove service-provider and group from URI; they are not necessary when operating on a user.
+PUT /broadworks/service-providers/{+serviceProviderId}/groups/{+groupId}/users/{+userId}/services/Call%20Forwarding%20No%20Answer
 > Content-Type: application/json
 {
     "isActive" : true,
@@ -2290,8 +2499,20 @@ PUT /broadworks/service-providers/{serviceProviderId}/groups/{groupId}/users/{us
 < 204
 
 
+Update settings for Call Forwarding Not Reachable (CFNR) service on a user.
+
+** FIXME: remove service-provider and group from URI; they are not necessary when operating on a user.
+PUT /broadworks/service-providers/{+serviceProviderId}/groups/{+groupId}/users/{+userId}/services/Call%20Forwarding%20Not%20Reachable
+> Content-Type: application/json
+{
+    "isActive" : true,
+    "forwardPhoneNumber" : "5553120301,
+}
+< 204
+
+
 --
-BroadWorks OCI
+BroadWorks Utility - OCI
 
 Network Element: BroadWorks (initially supports only the AS or XSP)
 
@@ -2304,13 +2525,14 @@ time no other service should be consuming this request.**
 The internal OCI request factory will convert  OCI XML response data directly into JSON data in the 200 OK response, with the exception of OCI XML elements of the "OCITable"
 data type. The OCITable data will be transformed so that each row of the table is a key:value pair, where the key is the
 column name and the value is the data value. This is illustrated in the example below.
-POST /network-elements/broadworks/{ne_id}/processOci
+POST /network-elements/broadworks/{+ne_id}/processOci
 > Content-Type: application/json
 {
     "command" : "ServiceProviderLanguageGetAvailableListResponse",
     "serviceProviderId" : "exampleCom"
 }
 < 200
+< Content-Type: application/json
 {
     "defaultLanguage": "English",
     "languageTable": [
@@ -2361,3 +2583,40 @@ POST /network-elements/broadworks/{ne_id}/processOci
 < 502
 +++++
 < 504
+
+
+--
+CHANGELOG
+
+#1.5
+Changes for *Functional Description: Alternate API Navigation*:
+
+* Update URIs (self links, Location headers) to reflect changed URI construction
+* Update response bodies to add new properties required to expand URI Template variables
+* Correct specification for Sonus routes GET query
+* Add specification for Sonus route-queries GET query
+
+Changes for *Functional Description: Sonus Entity and Utility Services - Subscriber, Destination, and Route Modify Support*:
+
+* Add PUT for Sonus subscribers, destinations, routes.
+
+Changes for *Functional Description: Sonus Entity and Utility Services - Route Query Enhancements*:
+
+* Update Sonus routes GET query documentation, supported URL query parameters, and 200 OK response body.
+
+Changes for *Functional Description: VoIP User Create - Configure Call Forwarding Not Reachable (BroadWorks)*:
+
+* Update POST /broadworks/users (and various request/response bodies in all the process-related calls) to add Call Forwarding Not Reachable service.
+* Add PUT /broadworks/service-providers/{+serviceProviderId}/groups/{+groupId}/users/{+userId}/services/Call%20Forwarding%20Not%20Reachable
+
+General:
+
+* update all HAL responses to include curies, regardless of whether or not _embedded is present
+* Add "+" in various URI templates to indicate reserved expansion.
+* Remove invalid number-translations GET.
+* Refactor number-translations POST, GET, PUT to be consistent with other Sonus resources.
+* Correct the URI in the Location header in Sonus routes POST 201 Created response, and in embedded ls:routes in 409 Conflict response, and in the 200 OK response to the GET query.
+* Update URI and change strings to booleans in PUT /broadworks/users/{+userId}/services.
+* Add timeZone and language in various request/response bodies related to the BroadWorks user add process.
+
+--
