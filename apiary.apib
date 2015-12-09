@@ -5463,29 +5463,14 @@ Cluster resolution method: Group
             <td>no</td>
             <td>always</td>
             <td>
-                The following table describes behavior depending on values for this parameter.
-                <table border="1">
-                    <thead>
-                        <th>Value</th>
-                        <th>Action</th>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>always</td>
-                            <td>Always apply the auto-increase logic described below.</td>
-                        </tr>
-                        <tr>
-                            <td>never</td>
-                            <td>Never apply the auto-increase logic described below (simply return success).</td>
-                        </tr>
-                        <tr>
-                            <td>enterprise-only</td>
-                            <td>Apply the auto-increase logic described below only when serviceProviderId identifies an Enterprise.
-                            If serviceProviderId identifies a Service Provider, do not apply the auto-increase logic described below (simply return success).
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+                The following list describes behavior depending on values for this parameter.
+                <ul>
+                    <li><b>always</b> - Always apply the auto-increase logic described below.</li>
+                    <li><b>never</b> - Never apply the auto-increase logic described below (simply return success).</li>
+                    <li><b>enterprise-only</b> - If serviceProviderId identifies a Service Provider, do not apply the auto-increase logic described below (simply return success).</li>
+                </ul>
+                
+              
                 The auto increase logic to suffice Trunk Call Capacity for a new Group Trunk Group is as follows:<br />
                 1. For maxActiveCalls all we need to do:<br />
                 &nbsp;&nbsp;&nbsp;&nbsp;a. Check that the value requested in the request (capacityManagement.maxActiveCalls.total) is equal or smaller than the value on the Group (maxActiveCalls).<br />
